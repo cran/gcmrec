@@ -46,26 +46,26 @@ C
 c   Case without frailties  
 	
 	SUBROUTINE Jacknife(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1    censored,intercepts,slopes,lastperrep,perrepind,
-	2    effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
-	3    ns,tol,maxiter,estiEndJack)
+     *    censored,intercepts,slopes,lastperrep,perrepind,
+     *    effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
+     *    ns,tol,maxiter,estiEndJack)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc,searchBoth
 	integer k(n),nk,i,j,ns(n),maxiter,method,kkiter
 	double precision s,tau(n),caltimes(nk),gaptimes(nk),
-	1    censored(n),offset(n),
-	2    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3    effagebegin(nk),effage(nk),cov(nvar,nk),
-	4    alphaSeed,betaSeed(nvar),Z(n),tol,loglik,estiEnd(nvar+1),
-	5    info(nvar+1,nvar+1) 
+     *    censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),
+     *    alphaSeed,betaSeed(nvar),Z(n),tol,loglik,estiEnd(nvar+1),
+     *    info(nvar+1,nvar+1) 
 	
 	integer kOK(n-1),nkOK,start(n),stop(n)
 	double precision tauOK(n-1),caltimesOK(nk),gaptimesOK(nk),
-	1  censoredOK(n-1),interceptsOK(nk),slopesOK(nk),lastperrepOK(nk),
-	2  perrepindOK(nk),effagebeginOK(nk),effageOK(nk),covOK(nvar,nk),
-	3  estiEndJack(n,nvar+1),offsetOK(n-1)
+     *  censoredOK(n-1),interceptsOK(nk),slopesOK(nk),lastperrepOK(nk),
+     *  perrepindOK(nk),effagebeginOK(nk),effageOK(nk),covOK(nvar,nk),
+     *  estiEndJack(n,nvar+1),offsetOK(n-1)
 	
 	
 	stop(1)=k(1)
@@ -98,10 +98,10 @@ c  Leave-one-out
 c Estimation 
 	
 	  call newtraph(s,n-1,nvar,kOK,nkOK,tauOK,caltimesOK,gaptimesOK,
-	1  censoredOK,interceptsOK,slopesOK,lastperrepOK,perrepindOK,
-	2  effagebeginOK,effageOK,covOK,alphaSeed,betaSeed,Z,offsetOK,
-        3  rhoFunc,ns,tol,maxiter,loglik,estiEnd,info,searchBoth,
-	4  kkiter)
+     *  censoredOK,interceptsOK,slopesOK,lastperrepOK,perrepindOK,
+     *  effagebeginOK,effageOK,covOK,alphaSeed,betaSeed,Z,offsetOK,
+     *  rhoFunc,ns,tol,maxiter,loglik,estiEnd,info,searchBoth,
+     *  kkiter)
                   
 	  do j=1,nvar+1
 	   estiEndJack(i,j)=estiEnd(j)
@@ -118,27 +118,27 @@ c Estimation
 c   Case with frailties  
 	
 	SUBROUTINE Jacknife2(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1    censored,intercepts,slopes,lastperrep,perrepind,
-	2    effagebegin,effage,ndiseff,diseff,cov,alphaSeed,betaSeed,
-	3    xi,Z,offset,rhoFunc,tol,maxiter,maxXi,estiEndJack)
+     *    censored,intercepts,slopes,lastperrep,perrepind,
+     *    effagebegin,effage,ndiseff,diseff,cov,alphaSeed,betaSeed,
+     *    xi,Z,offset,rhoFunc,tol,maxiter,maxXi,estiEndJack)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc,control,ndiseff,maxXi
 	integer k(n),nk,i,j,ns(n),maxiter,method,kkiter
 	double precision s,tau(n),caltimes(nk),gaptimes(nk),
-	1    censored(n),offset(n),
-	2    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3    effagebegin(nk),effage(nk),cov(nvar,nk),
-	4    alphaSeed,betaSeed(nvar),Z(n),tol,loglik,
-	5    estiEnd(nvar+2+n),info(nvar+1,nvar+1),xi,loglikEnd,
-	6    diseff(ndiseff) 
+     *    censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),
+     *    alphaSeed,betaSeed(nvar),Z(n),tol,loglik,
+     *    estiEnd(nvar+2+n),info(nvar+1,nvar+1),xi,loglikEnd,
+     *    diseff(ndiseff) 
 	
 	integer kOK(n-1),nkOK,start(n),stop(n)
 	double precision tauOK(n-1),caltimesOK(nk),gaptimesOK(nk),
-	1  censoredOK(n-1),interceptsOK(nk),slopesOK(nk),lastperrepOK(nk),
-	2  perrepindOK(nk),effagebeginOK(nk),effageOK(nk),covOK(nvar,nk),
-	3  estiEndJack(n,nvar+2),offsetOK(n-1)
+     *  censoredOK(n-1),interceptsOK(nk),slopesOK(nk),lastperrepOK(nk),
+     *  perrepindOK(nk),effagebeginOK(nk),effageOK(nk),covOK(nvar,nk),
+     *  estiEndJack(n,nvar+2),offsetOK(n-1)
 	
 	
 	stop(1)=k(1)
@@ -171,10 +171,10 @@ c  Leave-one-out
 c Estimation 
 	
 	  call EstimWithFrailty(s,n-1,nvar,kOK,nkOK,tauOK,caltimesOK,
-	1  gaptimesOK,censoredOK,interceptsOK,slopesOK,lastperrepOK,
-	2  perrepindOK,effagebeginOK,effageOK,ndiseff,diseff,covOK,
-	3  alphaSeed,betaSeed,xi,Z,offset,rhoFunc,tol,maxiter,maxXi,estiEnd,
-	4  control,loglikEnd)
+     *  gaptimesOK,censoredOK,interceptsOK,slopesOK,lastperrepOK,
+     *  perrepindOK,effagebeginOK,effageOK,ndiseff,diseff,covOK,
+     *  alphaSeed,betaSeed,xi,Z,offset,rhoFunc,tol,maxiter,maxXi,
+     *  estiEnd,control,loglikEnd)
                   
 	  do j=1,nvar+1
 	   estiEndJack(i,j)=estiEnd(j)
@@ -262,25 +262,26 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 	
 	
 	SUBROUTINE EstimWithFrailty(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1  censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
-	2  effage,ndiseff,diseff,cov,alphaSeed,betaSeed,xi,Z,offset,rhoFunc,
-	3  tol,maxiter,maxXi,estimEnd,control,loglikEnd)
+     *  censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
+     *  effage,ndiseff,diseff,cov,alphaSeed,betaSeed,xi,Z,offset,
+     *  rhoFunc,tol,maxiter,maxXi,estimEnd,control,loglikEnd)
 
 	implicit none
 	
 	integer n,nvar,rhoFunc,ndiseff,method,searchxi
 	integer k(n),nk,i,j,kiter,search,maxiter,searchNR,kiterNR
 	double precision s,tau(n),caltimes(nk),gaptimes(nk),censored(n),
-	1     intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	2     effagebegin(nk),effage(nk),cov(nvar,nk),
-	3     alphaSeed,betaSeed(nvar),Z(n),xi,diseff(ndiseff)
+     *     intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *     effagebegin(nk),effage(nk),cov(nvar,nk),
+     *     alphaSeed,betaSeed(nvar),Z(n),xi,diseff(ndiseff)
 
 	double precision lambdaOld(ndiseff),survOld(ndiseff),
-	1     lambdaNew(ndiseff),survNew(ndiseff),ZOld(n),xiOld,alphaOld,
-	2     betaOld(nvar),AA(n),distAll,tol,ZNew(n),loglik,estiNew(nvar+1),
-	3     info(nvar+1,nvar+1),alphaNew,betaNew(nvar),xiNew,norm,
-	4     GammaLogLikOptim,distAlpha,distBeta,distXi,distZ,distLamb,
-	5     deltalambdafuncOld(ndiseff),deltalambdaNew(ndiseff),BB(n)
+     *     lambdaNew(ndiseff),survNew(ndiseff),ZOld(n),xiOld,alphaOld,
+     *     betaOld(nvar),AA(n),distAll,tol,ZNew(n),loglik,
+     *     estiNew(nvar+1),
+     *     info(nvar+1,nvar+1),alphaNew,betaNew(nvar),xiNew,norm,
+     *     GammaLogLikOptim,distAlpha,distBeta,distXi,distZ,distLamb,
+     *     deltalambdafuncOld(ndiseff),deltalambdaNew(ndiseff),BB(n)
 
 	double precision estimEnd(nvar+2+n),HUGE,xiratOld,xiratNew,offset(n)
 	real*8 loglikEnd,GammaLogLik,loglikMarg
@@ -311,15 +312,15 @@ c	Step 0: Initialization
 c       Initialize the hazard estimate (same without frailties)
 	
 	call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1     censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
-	2     effage,ndiseff,diseff,cov,alphaOld,betaOld,ZOld,offset,rhoFunc,
-	3     lambdaOld,deltalambdafuncOld,survOld)
+     *  censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
+     *  effage,ndiseff,diseff,cov,alphaOld,betaOld,ZOld,offset,
+     *  rhoFunc,lambdaOld,deltalambdafuncOld,survOld)
 	
 	
 	call CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1     censored,intercepts,slopes,lastperrep,perrepind,
-	2     effagebegin,effage,ndiseff,diseff,cov,alphaOld,
-	3     betaOld,deltalambdafuncOld,ZOld,offset,rhoFunc,KK,AA,BB)
+     *  censored,intercepts,slopes,lastperrep,perrepind,
+     *  effagebegin,effage,ndiseff,diseff,cov,alphaOld,
+     *  betaOld,deltalambdafuncOld,ZOld,offset,rhoFunc,KK,AA,BB)
 
 
 c       Start of EM Iteration
@@ -336,10 +337,10 @@ c       obtain new Zhat's
 c       Step-2 (M-Step#1): Given alphahat,betahat,xihat,Lambhat:
 c       obtain new Lambhat
 	   
-	   call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1   	censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
-	2   	effage,ndiseff,diseff,cov,alphaOld,betaOld,ZNew,offset,rhoFunc,
-	3   	lambdaNew,deltalambdaNew,survNew)
+	  call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *    censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
+     *    effage,ndiseff,diseff,cov,alphaOld,betaOld,ZNew,offset,
+     *    rhoFunc,lambdaNew,deltalambdaNew,survNew)
 
 c       Step-3 (M-Step#2): Given Lambhat,xihat,Zhat:
 c       obtain new alphahat,betahat
@@ -348,22 +349,22 @@ c       $Newton-Raphson$
 
                 if (rhoFunc.eq.2) then
 
-                     call newtraph(s,n,nvar,k,nk,tau,caltimes,gaptimes,
- 	1   	censored,intercepts,slopes,lastperrep,perrepind,
-	2   	effagebegin,effage,cov,alphaOld,betaOld,ZNew,offset,rhoFunc,
-	3   	ns,tol,maxiter,loglik,estiNew,info,searchNR,kiterNR)
+              call newtraph(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *   	censored,intercepts,slopes,lastperrep,perrepind,
+     *   	effagebegin,effage,cov,alphaOld,betaOld,ZNew,offset,rhoFunc,
+     *   	ns,tol,maxiter,loglik,estiNew,info,searchNR,kiterNR)
 
                      alphaNew=estiNew(1)
 	       do i=1,nvar
 	          betaNew(i)=estiNew(i+1)
 	       end do   
             
-                else
+             else
 
-                     call nrBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
- 	1   	censored,intercepts,slopes,lastperrep,perrepind,
-	2   	effagebegin,effage,cov,alphaOld,betaOld,ZNew,offset,rhoFunc,
-	3   	ns,tol,maxiter,loglik,estiNew,info,searchNR,kiterNR)
+           call nrBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *      censored,intercepts,slopes,lastperrep,perrepind,
+     *      effagebegin,effage,cov,alphaOld,betaOld,ZNew,offset,rhoFunc,
+     *      ns,tol,maxiter,loglik,estiNew,info,searchNR,kiterNR)
 
                      alphaNew=1.0d0
 	       do i=1,nvar
@@ -377,9 +378,9 @@ c       $Newton-Raphson$
 c       Step-4 (M-Step#3): Given Lambhat,Zhat,alphahat,betahat:
 c       obtain new xihat
 	   call CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1   	censored,intercepts,slopes,lastperrep,perrepind,
-	2   	effagebegin,effage,ndiseff,diseff,cov,alphaNew,
-	3   	betaNew,deltalambdaNew,ZNew,offset,rhoFunc,KK,AA,BB)
+     *   	censored,intercepts,slopes,lastperrep,perrepind,
+     *   	effagebegin,effage,ndiseff,diseff,cov,alphaNew,
+     *   	betaNew,deltalambdaNew,ZNew,offset,rhoFunc,KK,AA,BB)
 	   
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -391,7 +392,7 @@ CCCC    This is printed directly to R process using the subroutine intpr.
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
            if (maxXi.eq.1) then           
 	     call MaxWrtXi(xiOld,n,KK,AA,BB,tol,xiNew,loglikMarg,
-	1	maxiter,searchxi)
+     *	maxiter,searchxi)
 	   else 
 	     xiNew=GammaLogLikOptim(xiOld,n,KK,AA,BB)
 	   end if
@@ -416,7 +417,7 @@ c       distance based on xi/(1+xi)
 c       no comparing Z's
 c       distAll=max(max(distBeta,distAlpha),distXi) 
 	 distAll=max(max(max(distLamb,distXi),
-     1	      distBeta),distAlpha) 
+     *	      distBeta),distAlpha) 
 	   
 
 
@@ -468,7 +469,7 @@ c       Update the vectors
 
 	integer n,i
 	double precision xiOld,A(n),B(n),tol,dist,etaOld,
-	1    xiratOld,G0,G1,G2,HUGE,etaNew,xiNew,xiratNew,tol1
+     *    xiratOld,G0,G1,G2,HUGE,etaNew,xiNew,xiratNew,tol1
 	integer K(n),KK(n), niter, maxiter,search
 	parameter (HUGE=1.0d60) 
 
@@ -542,9 +543,9 @@ c       Marginal Log likelihood for Xi
 	   end if
 	   G0=G0+q1+(xi*dlog(xi))-((xi+K(i))*dlog(xi+A(i)))+B(i)
 	   G1=G1+q2+(dlog(xi)+1.d0)-dlog(xi+A(i))
-	1	-((xi+dble(K(i)))/(xi+A(i)))
+     *	-((xi+dble(K(i)))/(xi+A(i)))
 	    G2=G2-q3+(1/xi)-(1/(xi+A(i)))-
-	2	((A(i)-dble(K(i)))/((xi+A(i))**2))
+     *	((A(i)-dble(K(i)))/((xi+A(i))**2))
 	end do
 	
 	return 
@@ -659,25 +660,25 @@ c       We need to adjust K to reflect that 0 is included in count
 
 
 	SUBROUTINE CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1    censored,intercepts,slopes,lastperrep,perrepind,
-	2    effagebegin,effage,ndiseff,diseff,cov,alpha,
-	3    beta,deltalambdafunc,Z,offset,rhoFunc,KK,AA,BB)
+     *    censored,intercepts,slopes,lastperrep,perrepind,
+     *    effagebegin,effage,ndiseff,diseff,cov,alpha,
+     *    beta,deltalambdafunc,Z,offset,rhoFunc,KK,AA,BB)
 	implicit none
 
 	integer n,nvar,rhoFunc,ndiseff
 	integer k(n),nk,i,j,r,t,u
 	double precision s,tau(n),caltimes(nk),gaptimes(nk),
-	1    censored(n),offset(n),
-	2    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3    effagebegin(nk),effage(nk),cov(nvar,nk),alpha,
-	4    beta(nvar),Z(n),xi,diseff(ndiseff),deltalambdafunc(ndiseff)
+     *    censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),alpha,
+     *    beta(nvar),Z(n),xi,diseff(ndiseff),deltalambdafunc(ndiseff)
 	
 	double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
-	1    Gr2S0A1Be(nvar),
+     *    Gr2S0A1Be(nvar),
      .       Gr2S0Be(nvar,nvar),Ysubj(n)
 	
 	double precision AA(n),BB(n),rho,psi,
-	1    covariate(nvar),effageOK(200)
+     *    covariate(nvar),effageOK(200)
 	integer KK(n),pos
 
 
@@ -692,9 +693,9 @@ c       Computes Ki's and Ai's to obtain new Z-values
 	do i=1,ndiseff
 	   
           call AtRisk(s,KK,diseff(i),n,nvar,nk,k,tau,caltimes,
-     1	   gaptimes,censored,intercepts,slopes,lastperrep,
-     2	   perrepind,effagebegin,effage,cov,alpha,beta,Z,offset,
-     3     rhoFunc,Ysubj,S0,GrS0A1,GrS0Be,Gr2S0A1,Gr2S0A1Be,Gr2S0Be)
+     *	   gaptimes,censored,intercepts,slopes,lastperrep,
+     *	   perrepind,effagebegin,effage,cov,alpha,beta,Z,offset,
+     *     rhoFunc,Ysubj,S0,GrS0A1,GrS0Be,Gr2S0A1,Gr2S0A1Be,Gr2S0Be)
 	   
 	   do j=1,n
 	      AA(j)=AA(j)+(Ysubj(j)*deltalambdafunc(i))
@@ -721,7 +722,7 @@ c       Computes Ki's and Ai's to obtain new Z-values
 	   if (KK(i).gt.1) then
 	      do j=2,KK(i)
 		 BB(i)=BB(i)+dlog(rho(j-2,alpha,rhoFunc))+
-	1	      dlog(psi(nvar,covariate,beta,offset(i)))
+     *	      dlog(psi(nvar,covariate,beta,offset(i)))
 		 do u=1,ndiseff
 		    if (effageOK(j).eq.diseff(u)) then
 		       BB(i)=BB(i)+dlog(deltalambdafunc(u))
@@ -742,33 +743,33 @@ c       Computes Ki's and Ai's to obtain new Z-values
 
 
 	SUBROUTINE newtraph(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1    censored,intercepts,slopes,lastperrep,perrepind,
-	2    effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
-	3    ns,tol,maxiter,loglik,estiEnd,info,searchBoth,
-	1    kkiter)
+     *    censored,intercepts,slopes,lastperrep,perrepind,
+     *    effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
+     *    ns,tol,maxiter,loglik,estiEnd,info,searchBoth,
+     *    kkiter)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j
 	double precision s,tau(n),caltimes(nk),gaptimes(nk),
-	1    censored(n),offset(n),
-	1    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	2    effagebegin(nk),effage(nk),cov(nvar,nk),
-	3    alphaSeed,betaSeed(nvar),Z(n),
-	4    loglik,score(nvar+1),info(nvar+1,nvar+1),
-	5    scorealpha,infoalpha,scorebeta(nvar),
-	6    infoalphabeta(nvar),infobeta(nvar,nvar)
+     *    censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),
+     *    alphaSeed,betaSeed(nvar),Z(n),
+     *    loglik,score(nvar+1),info(nvar+1,nvar+1),
+     *    scorealpha,infoalpha,scorebeta(nvar),
+     *    infoalphabeta(nvar),infobeta(nvar,nvar)
 	
 	
 	double precision estiOld(nvar+1),estiNew(nvar+1),
-	1    DecDirec(nvar+1),
-	1    distance,tol,alphaOld,betaOld(nvar),alpha,beta(nvar),
-	2    estiNewAlpha,estiNewBeta(nvar),tol1,estiEnd(nvar+1)
+     *    DecDirec(nvar+1),
+     *    distance,tol,alphaOld,betaOld(nvar),alpha,beta(nvar),
+     *    estiNewAlpha,estiNewBeta(nvar),tol1,estiEnd(nvar+1)
 	
 	integer ns(n),kkiter,maxiter,
-	1    search,searchAlpha,searchBeta,searchBoth,
-	1    kkitera, kkiterb, kkiterab
+     *    search,searchAlpha,searchBeta,searchBoth,
+     *    kkitera, kkiterb, kkiterab
 
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -808,9 +809,9 @@ c       Maximum Alpha
 	   end do
 	   
 	   call newtraphAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1	censored,intercepts,slopes,lastperrep,perrepind,
-	2	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
-	3	ns,tol1,maxiter,estiNewAlpha,searchAlpha,kkitera)
+     *	censored,intercepts,slopes,lastperrep,perrepind,
+     *	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
+     *	ns,tol1,maxiter,estiNewAlpha,searchAlpha,kkitera)
 	   
 	   alphaOld=estiNewAlpha		
 	   
@@ -820,9 +821,9 @@ c       Maximum Alpha
 
 c       Maximum Beta	 		
 	   call newtraphBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1	censored,intercepts,slopes,lastperrep,perrepind,
-	2	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
-	3	ns,tol1,maxiter,estiNewBeta,searchBeta,kkiterb)
+     *	censored,intercepts,slopes,lastperrep,perrepind,
+     *	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
+     *	ns,tol1,maxiter,estiNewBeta,searchBeta,kkiterb)
 	   
 	   
 	   do i=1,nvar
@@ -862,10 +863,10 @@ c       stopping rule
 c       Maximum both
 	if (search.eq.1) then
 	   call newtraphBoth(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1	censored,intercepts,slopes,lastperrep,perrepind,
-	2	effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
-	3	ns,tol,maxiter,loglik,estiEnd,
-	3	info,searchBoth,kkiterab)
+     *	censored,intercepts,slopes,lastperrep,perrepind,
+     *	effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
+     *	ns,tol,maxiter,loglik,estiEnd,
+     *	info,searchBoth,kkiterab)
 
 	end if
 	
@@ -875,28 +876,28 @@ c       Maximum both
 
 	
 	SUBROUTINE newtraphBoth(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1   censored,intercepts,slopes,lastperrep,perrepind,
-	2   effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
-	3   ns,tol,maxiter,loglik,estiNew,info,search,kiter)
+     *   censored,intercepts,slopes,lastperrep,perrepind,
+     *   effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
+     *   ns,tol,maxiter,loglik,estiNew,info,search,kiter)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j
 	double precision s,tau(n),caltimes(nk),
-	1    gaptimes(nk),censored(n),offset(n),
-	2   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3   effagebegin(nk),effage(nk),cov(nvar,nk),
-	4   alphaSeed,betaSeed(nvar),Z(n),
-	5   loglik,score(nvar+1),info(nvar+1,nvar+1),
-	6   scorealpha,infoalpha,scorebeta(nvar),
-	7   infoalphabeta(nvar),infobeta(nvar,nvar)
+     *    gaptimes(nk),censored(n),offset(n),
+     *   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *   effagebegin(nk),effage(nk),cov(nvar,nk),
+     *   alphaSeed,betaSeed(nvar),Z(n),
+     *   loglik,score(nvar+1),info(nvar+1,nvar+1),
+     *   scorealpha,infoalpha,scorebeta(nvar),
+     *   infoalphabeta(nvar),infobeta(nvar,nvar)
 	
 	
 	double precision estiOld(nvar+1),estiNew(nvar+1),
-	1    DecDirec(nvar+1),
-	2   distance,tol,alphaOld,betaOld(nvar),
-	3   dinc,wa(nvar+1,nvar+1)
+     *    DecDirec(nvar+1),
+     *   distance,tol,alphaOld,betaOld(nvar),
+     *   dinc,wa(nvar+1,nvar+1)
 	
 	integer ns(n),kiter,maxiter,search
 	real det
@@ -918,10 +919,10 @@ c       Newton-Raphson procedure
 	   
 	   kiter=kiter+1
 	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1 	censored,intercepts,slopes,lastperrep,perrepind,
-	2 	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
-	3 	ns,loglik,score,info,scorealpha,scorebeta,
-	4 	infoalpha,infobeta)
+     * 	censored,intercepts,slopes,lastperrep,perrepind,
+     * 	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
+     * 	ns,loglik,score,info,scorealpha,scorebeta,
+     * 	infoalpha,infobeta)
 	   
 	   
 	   estiOld(1)=alphaOld
@@ -972,23 +973,23 @@ c       stopping rule
 	
 	
 	SUBROUTINE newtraphAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1   censored,intercepts,slopes,lastperrep,perrepind,
-	2   effagebegin,effage,cov,alphaSeed,
-	1   betaSeed,Z,offset,rhoFunc,
-	2   ns,tol,maxiter,estiNew,search,kiter)
+     *   censored,intercepts,slopes,lastperrep,perrepind,
+     *   effagebegin,effage,cov,alphaSeed,
+     *   betaSeed,Z,offset,rhoFunc,
+     *   ns,tol,maxiter,estiNew,search,kiter)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j
 	double precision s,tau(n),caltimes(nk),
-	1    gaptimes(nk),censored(n),offset(n),
-	2   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3   effagebegin(nk),effage(nk),cov(nvar,nk),
-	4   alphaSeed,betaSeed(nvar),Z(n),
-	5   loglik,score(nvar+1),info(nvar+1,nvar+1),
-	6   scorealpha,infoalpha,scorebeta(nvar),
-	7   infoalphabeta(nvar),infobeta(nvar,nvar)
+     *    gaptimes(nk),censored(n),offset(n),
+     *   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *   effagebegin(nk),effage(nk),cov(nvar,nk),
+     *   alphaSeed,betaSeed(nvar),Z(n),
+     *   loglik,score(nvar+1),info(nvar+1,nvar+1),
+     *   scorealpha,infoalpha,scorebeta(nvar),
+     *   infoalphabeta(nvar),infobeta(nvar,nvar)
 	
 	
 	double precision estiOld,estiNew,distance,tol,alphaOld
@@ -1011,10 +1012,10 @@ c       Newton-Raphson procedure
 	   
 	   kiter=kiter+1
 	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1 	censored,intercepts,slopes,lastperrep,perrepind,
-	2 	effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
-	3 	ns,loglik,score,info,scorealpha,scorebeta,
-	4 	infoalpha,infobeta)
+     * 	censored,intercepts,slopes,lastperrep,perrepind,
+     * 	effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
+     * 	ns,loglik,score,info,scorealpha,scorebeta,
+     * 	infoalpha,infobeta)
 	   
 	   
 	   estiOld=alphaOld
@@ -1039,27 +1040,27 @@ c       stopping rule
 
 
 	SUBROUTINE newtraphBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1    censored,intercepts,slopes,lastperrep,perrepind,
-	2    effagebegin,effage,cov,alphaSeed,
-	3    betaSeed,Z,offset,rhoFunc,
-	4    ns,tol,maxiter,estiNew,search,kiter)
+     *    censored,intercepts,slopes,lastperrep,perrepind,
+     *    effagebegin,effage,cov,alphaSeed,
+     *    betaSeed,Z,offset,rhoFunc,
+     *    ns,tol,maxiter,estiNew,search,kiter)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j
 	double precision s,tau(n),caltimes(nk),
-	1    gaptimes(nk),censored(n),offset(n),
-	2    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3    effagebegin(nk),effage(nk),cov(nvar,nk),
-	4    alphaSeed,betaSeed(nvar),Z(n),
-	5    loglik,score(nvar+1),info(nvar+1,nvar+1),
-	6    scorealpha,infoalpha,scorebeta(nvar),
-	7    infoalphabeta(nvar),infobeta(nvar,nvar)
+     *    gaptimes(nk),censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),
+     *    alphaSeed,betaSeed(nvar),Z(n),
+     *    loglik,score(nvar+1),info(nvar+1,nvar+1),
+     *    scorealpha,infoalpha,scorebeta(nvar),
+     *    infoalphabeta(nvar),infobeta(nvar,nvar)
 	
 	
 	double precision estiOld(nvar),estiNew(nvar),DecDirec(nvar),
-	1    distance,tol,betaOld(nvar)
+     *    distance,tol,betaOld(nvar)
 	
 	integer ns(n),kiter,maxiter,search
 	real det
@@ -1080,10 +1081,10 @@ c       Newton-Raphson procedure
 	   
 	   kiter=kiter+1
 	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1  	censored,intercepts,slopes,lastperrep,perrepind,
-	2  	effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
-	3  	ns,loglik,score,info,scorealpha,scorebeta,
-	4  	infoalpha,infobeta)
+     *  	censored,intercepts,slopes,lastperrep,perrepind,
+     *  	effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
+     *  	ns,loglik,score,info,scorealpha,scorebeta,
+     *  	infoalpha,infobeta)
 	   
 	   
 	   do i=1,nvar
@@ -1140,10 +1141,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 cccc ----    rho=1
 
 	SUBROUTINE nrBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1    censored,intercepts,slopes,lastperrep,perrepind,
-	2    effagebegin,effage,cov,alphaSeed,
-	3    betaSeed,Z,offset,rhoFunc,
-	4    ns,tol,maxiter,loglik,estiNew,infobeta,search,kiter)
+     *    censored,intercepts,slopes,lastperrep,perrepind,
+     *    effagebegin,effage,cov,alphaSeed,
+     *    betaSeed,Z,offset,rhoFunc,
+     *    ns,tol,maxiter,loglik,estiNew,infobeta,search,kiter)
 
 	
 	implicit none
@@ -1151,17 +1152,17 @@ cccc ----    rho=1
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j
 	double precision s,tau(n),caltimes(nk),
-	1    gaptimes(nk),censored(n),offset(n),
-	2    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3    effagebegin(nk),effage(nk),cov(nvar,nk),
-	4    alphaSeed,betaSeed(nvar),Z(n),
-	5    loglik,score(nvar+1),info(nvar+1,nvar+1),
-	6    scorealpha,infoalpha,scorebeta(nvar),
-	7    infoalphabeta(nvar),infobeta(nvar,nvar)
+     *    gaptimes(nk),censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),
+     *    alphaSeed,betaSeed(nvar),Z(n),
+     *    loglik,score(nvar+1),info(nvar+1,nvar+1),
+     *    scorealpha,infoalpha,scorebeta(nvar),
+     *    infoalphabeta(nvar),infobeta(nvar,nvar)
 	
 	
 	double precision estiOld(nvar),estiNew(nvar),DecDirec(nvar),
-	1    distance,tol,betaOld(nvar)
+     *    distance,tol,betaOld(nvar)
 	
 	integer ns(n),kiter,maxiter,search
 	real det
@@ -1182,10 +1183,10 @@ c       Newton-Raphson procedure
 	   
 	   kiter=kiter+1
 	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1  	censored,intercepts,slopes,lastperrep,perrepind,
-	2  	effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
-	3  	ns,loglik,score,info,scorealpha,scorebeta,
-	4  	infoalpha,infobeta)
+     *  	censored,intercepts,slopes,lastperrep,perrepind,
+     *  	effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
+     *  	ns,loglik,score,info,scorealpha,scorebeta,
+     *  	infoalpha,infobeta)
 	   
 	   
                  do i=1,nvar
@@ -1235,23 +1236,23 @@ c       stopping rule
 ccc --------  No covariates
 
 	SUBROUTINE nrAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1   censored,intercepts,slopes,lastperrep,perrepind,
-	2   effagebegin,effage,cov,alphaSeed,
-	1   betaSeed,Z,offset,rhoFunc,
-	2   ns,tol,maxiter,loglik,estiNew,infoalpha,search,kiter)
+     *   censored,intercepts,slopes,lastperrep,perrepind,
+     *   effagebegin,effage,cov,alphaSeed,
+     *   betaSeed,Z,offset,rhoFunc,
+     *   ns,tol,maxiter,loglik,estiNew,infoalpha,search,kiter)
 	
 	implicit none
 	
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j
 	double precision s,tau(n),caltimes(nk),
-	1    gaptimes(nk),censored(n),offset(n),
-	2   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-	3   effagebegin(nk),effage(nk),cov(nvar,nk),
-	4   alphaSeed,betaSeed(nvar),Z(n),
-	5   loglik,score(nvar+1),info(nvar+1,nvar+1),
-	6   scorealpha,infoalpha,scorebeta(nvar),
-	7   infoalphabeta(nvar),infobeta(nvar,nvar)
+     *    gaptimes(nk),censored(n),offset(n),
+     *   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *   effagebegin(nk),effage(nk),cov(nvar,nk),
+     *   alphaSeed,betaSeed(nvar),Z(n),
+     *   loglik,score(nvar+1),info(nvar+1,nvar+1),
+     *   scorealpha,infoalpha,scorebeta(nvar),
+     *   infoalphabeta(nvar),infobeta(nvar,nvar)
 	
 	
 	double precision estiOld,estiNew,distance,tol,alphaOld
@@ -1274,10 +1275,10 @@ c       Newton-Raphson procedure
 	   
 	   kiter=kiter+1
 	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-	1 	censored,intercepts,slopes,lastperrep,perrepind,
-	2 	effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
-	3 	ns,loglik,score,info,scorealpha,scorebeta,
-	4 	infoalpha,infobeta)
+     * 	censored,intercepts,slopes,lastperrep,perrepind,
+     * 	effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
+     * 	ns,loglik,score,info,scorealpha,scorebeta,
+     * 	infoalpha,infobeta)
 	   
 	   
 	   estiOld=alphaOld
@@ -1317,11 +1318,11 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 	integer n,nvar,rhoFunc
 	integer k(n),nk,i,j,ndiseff,ns(n)
 	double precision s,tau(n),caltimes(nk),
-     1    gaptimes(nk),censored(n),offset(n),
-     2    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
-     3    effagebegin(nk),effage(nk),cov(nvar,nk),
-     4    alpha,beta(nvar),Z(n),ONE,ZERO,diseff(ndiseff),
-     5    DeltaNst(ndiseff),S0st(ndiseff) 
+     *   gaptimes(nk),censored(n),offset(n),
+     *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
+     *    effagebegin(nk),effage(nk),cov(nvar,nk),
+     *    alpha,beta(nvar),Z(n),ONE,ZERO,diseff(ndiseff),
+     *    DeltaNst(ndiseff),S0st(ndiseff) 
       
 	double precision GrS0A1,Gr2S0A1,GrS0Be(nvar),Gr2S0A1Be(nvar),
      .       Gr2S0Be(nvar,nvar),Ysubj(n)
@@ -1484,7 +1485,7 @@ c     initialization
 		  
 		  do t=1,nvar
 		   scorebeta(t)=scorebeta(t)+
-	1		  covariate(t)-(GrS0Be(t)/S0) 
+     *		  covariate(t)-(GrS0Be(t)/S0) 
 		  end do
 		  
 		  do t=1,nvar
@@ -1505,7 +1506,7 @@ c     initialization
 		  do t=1,nvar
                    do r=1,nvar
 	            infobeta(t,r)=infobeta(t,r)+(Gr2S0Be(t,r)/S0)-
-	1	       ebeta2(t,r)
+     *	       ebeta2(t,r)
 		   end do
 		  end do
 
@@ -1635,7 +1636,7 @@ c     modification made by Juan (no break)
      .          effageOK(200),covOK(nvar,200) 
 	
 	double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
-     1    Gr2S0A1Be(nvar),offset(n),
+     .    Gr2S0A1Be(nvar),offset(n),
      .    Gr2S0Be(nvar,nvar),alpha,beta(nvar),Z(n),Zsubj,ZERO,
      .    Ysubj(n),GrYsubjA1,Gr2YsubjA1,GrYsubjBe(nvar),
      .    Gr2YsubjA1Be(nvar),Gr2YsubjBe(nvar,nvar)      
@@ -1841,7 +1842,7 @@ c       Equation (24) R_i
 	   end do
 
 	   R=(rho(kk-1,alpha,rhoFunc)*
-	1	psi(nvar,covariate,beta,offset))/slopes(kk)
+     *	psi(nvar,covariate,beta,offset))/slopes(kk)
 	   
 	   if (rhoFunc.eq.1) then
 c       $\rho(j;\alpha)=1$          		          	   
