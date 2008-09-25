@@ -7,7 +7,7 @@
   Prints a short summary of 'gcmrec' object 
 }
 \usage{
-\method{print}{gcmrec}(x, digits = max(options()$digits - 4, 3), ...)
+print.gcmrec(x, digits = max(options()$digits - 4, 3), ...)
 }
 \arguments{
   \item{x}{the result of a call to the gcmrec function}

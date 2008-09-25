@@ -146,7 +146,7 @@ gcmrec(formula, data, effageData = NULL, s, Frailty = FALSE,
 #   We use the well-known bladder cancer data set from survival package
 
 library(survival)
-data(bladder)
+data(bladder2)
 
 # we compute the interocurrence time
 bladder2$time<-bladder2$stop-bladder2$start

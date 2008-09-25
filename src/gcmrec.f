@@ -34,8 +34,8 @@
 *       *  the data must be ordered by id and event-censored
 *       *      MAXIMUM NUMBER OF INDIVIDUAL RECURRENCES SET EQUAL TO 200
 *       *      
-*       /	
-	
+*       /
+
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -44,238 +44,238 @@ C
 
 
 c   Case without frailties  
-	
-	SUBROUTINE Jacknife(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       
+       SUBROUTINE Jacknife(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,
      *    effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
      *    ns,tol,maxiter,estiEndJack)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc,searchBoth
-	integer k(n),nk,i,j,ns(n),maxiter,method,kkiter
-	double precision s,tau(n),caltimes(nk),gaptimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc,searchBoth
+       integer k(n),nk,i,j,ns(n),maxiter,method,kkiter
+       double precision s,tau(n),caltimes(nk),gaptimes(nk),
      *    censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),
      *    alphaSeed,betaSeed(nvar),Z(n),tol,loglik,estiEnd(nvar+1),
      *    info(nvar+1,nvar+1) 
-	
-	integer kOK(n-1),nkOK,start(n),stop(n)
-	double precision tauOK(n-1),caltimesOK(nk),gaptimesOK(nk),
+       
+       integer kOK(n-1),nkOK,start(n),stop(n)
+       double precision tauOK(n-1),caltimesOK(nk),gaptimesOK(nk),
      *  censoredOK(n-1),interceptsOK(nk),slopesOK(nk),lastperrepOK(nk),
      *  perrepindOK(nk),effagebeginOK(nk),effageOK(nk),covOK(nvar,nk),
      *  estiEndJack(n,nvar+1),offsetOK(n-1)
-	
-	
-	stop(1)=k(1)
-	start(1)=1
-	do i=2,n
-	  stop(i)=stop(i-1)+k(i)
-	  start(i)=start(i-1)+k(i-1)
-	end do 
-	
-	
-	do i=1,n  
-	
-c  Leave-one-out	
-	  call extract(n,k,i,kOK)
-	  nkOk=nk-k(i)
-	  call dextract(n,tau,i,tauOK)
-	  call dextract(n,offset,i,offsetOK)
-	  call extract2 (nk,caltimes,start(i),stop(i),caltimesOK)
-	  call extract2 (nk,gaptimes,start(i),stop(i),gaptimesOK)
-	  call dextract(n,censored,i,censoredOK)
-	  call extract2 (nk,intercepts,start(i),stop(i),interceptsOK)
-	  call extract2 (nk,slopes,start(i),stop(i),slopesOK)
-	  
-	  call extract2 (nk,lastperrep,start(i),stop(i),lastperrepOK)
-	  call extract2 (nk,perrepind,start(i),stop(i),perrepindOK)
-	  call extract2 (nk,effagebegin,start(i),stop(i),effagebeginOK)
-	  call extract2 (nk,effage,start(i),stop(i),effageOK)
-	  call extract3 (nvar,nk,cov,start(i),stop(i),covOK)
-	
+       
+       
+       stop(1)=k(1)
+       start(1)=1
+       do i=2,n
+         stop(i)=stop(i-1)+k(i)
+         start(i)=start(i-1)+k(i-1)
+       end do 
+       
+       
+       do i=1,n  
+       
+c  Leave-one-out
+         call extract(n,k,i,kOK)
+         nkOk=nk-k(i)
+         call dextract(n,tau,i,tauOK)
+         call dextract(n,offset,i,offsetOK)
+         call extract2 (nk,caltimes,start(i),stop(i),caltimesOK)
+         call extract2 (nk,gaptimes,start(i),stop(i),gaptimesOK)
+         call dextract(n,censored,i,censoredOK)
+         call extract2 (nk,intercepts,start(i),stop(i),interceptsOK)
+         call extract2 (nk,slopes,start(i),stop(i),slopesOK)
+         
+         call extract2 (nk,lastperrep,start(i),stop(i),lastperrepOK)
+         call extract2 (nk,perrepind,start(i),stop(i),perrepindOK)
+         call extract2 (nk,effagebegin,start(i),stop(i),effagebeginOK)
+         call extract2 (nk,effage,start(i),stop(i),effageOK)
+         call extract3 (nvar,nk,cov,start(i),stop(i),covOK)
+       
 c Estimation 
-	
-	  call newtraph(s,n-1,nvar,kOK,nkOK,tauOK,caltimesOK,gaptimesOK,
+       
+         call newtraph(s,n-1,nvar,kOK,nkOK,tauOK,caltimesOK,gaptimesOK,
      *  censoredOK,interceptsOK,slopesOK,lastperrepOK,perrepindOK,
      *  effagebeginOK,effageOK,covOK,alphaSeed,betaSeed,Z,offsetOK,
      *  rhoFunc,ns,tol,maxiter,loglik,estiEnd,info,searchBoth,
      *  kkiter)
                   
-	  do j=1,nvar+1
-	   estiEndJack(i,j)=estiEnd(j)
-	  end do
-	   
-	end do
-	
-	return
-	
-	END SUBROUTINE
+         do j=1,nvar+1
+          estiEndJack(i,j)=estiEnd(j)
+         end do
+          
+       end do
+       
+       return
+       
+       END SUBROUTINE
 
 
 
 c   Case with frailties  
-	
-	SUBROUTINE Jacknife2(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       
+       SUBROUTINE Jacknife2(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,
      *    effagebegin,effage,ndiseff,diseff,cov,alphaSeed,betaSeed,
      *    xi,Z,offset,rhoFunc,tol,maxiter,maxXi,estiEndJack)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc,control,ndiseff,maxXi
-	integer k(n),nk,i,j,ns(n),maxiter,method,kkiter
-	double precision s,tau(n),caltimes(nk),gaptimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc,control,ndiseff,maxXi
+       integer k(n),nk,i,j,ns(n),maxiter,method,kkiter
+       double precision s,tau(n),caltimes(nk),gaptimes(nk),
      *    censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),
      *    alphaSeed,betaSeed(nvar),Z(n),tol,loglik,
      *    estiEnd(nvar+2+n),info(nvar+1,nvar+1),xi,loglikEnd,
      *    diseff(ndiseff) 
-	
-	integer kOK(n-1),nkOK,start(n),stop(n)
-	double precision tauOK(n-1),caltimesOK(nk),gaptimesOK(nk),
+       
+       integer kOK(n-1),nkOK,start(n),stop(n)
+       double precision tauOK(n-1),caltimesOK(nk),gaptimesOK(nk),
      *  censoredOK(n-1),interceptsOK(nk),slopesOK(nk),lastperrepOK(nk),
      *  perrepindOK(nk),effagebeginOK(nk),effageOK(nk),covOK(nvar,nk),
      *  estiEndJack(n,nvar+2),offsetOK(n-1)
-	
-	
-	stop(1)=k(1)
-	start(1)=1
-	do i=2,n
-	  stop(i)=stop(i-1)+k(i)
-	  start(i)=start(i-1)+k(i-1)
-	end do 
-	
-	
-	do i=1,n  
-	
-c  Leave-one-out	
-	  call extract(n,k,i,kOK)
-	  nkOk=nk-k(i)
-	  call dextract(n,tau,i,tauOK)
-	  call dextract(n,offset,i,offsetOK)
-	  call extract2 (nk,caltimes,start(i),stop(i),caltimesOK)
-	  call extract2 (nk,gaptimes,start(i),stop(i),gaptimesOK)
-	  call dextract(n,censored,i,censoredOK)
-	  call extract2 (nk,intercepts,start(i),stop(i),interceptsOK)
-	  call extract2 (nk,slopes,start(i),stop(i),slopesOK)
-	  
-	  call extract2 (nk,lastperrep,start(i),stop(i),lastperrepOK)
-	  call extract2 (nk,perrepind,start(i),stop(i),perrepindOK)
-	  call extract2 (nk,effagebegin,start(i),stop(i),effagebeginOK)
-	  call extract2 (nk,effage,start(i),stop(i),effageOK)
-	  call extract3 (nvar,nk,cov,start(i),stop(i),covOK)
-	
+       
+       
+       stop(1)=k(1)
+       start(1)=1
+       do i=2,n
+         stop(i)=stop(i-1)+k(i)
+         start(i)=start(i-1)+k(i-1)
+       end do 
+       
+       
+       do i=1,n  
+       
+c  Leave-one-out
+         call extract(n,k,i,kOK)
+         nkOk=nk-k(i)
+         call dextract(n,tau,i,tauOK)
+         call dextract(n,offset,i,offsetOK)
+         call extract2 (nk,caltimes,start(i),stop(i),caltimesOK)
+         call extract2 (nk,gaptimes,start(i),stop(i),gaptimesOK)
+         call dextract(n,censored,i,censoredOK)
+         call extract2 (nk,intercepts,start(i),stop(i),interceptsOK)
+         call extract2 (nk,slopes,start(i),stop(i),slopesOK)
+         
+         call extract2 (nk,lastperrep,start(i),stop(i),lastperrepOK)
+         call extract2 (nk,perrepind,start(i),stop(i),perrepindOK)
+         call extract2 (nk,effagebegin,start(i),stop(i),effagebeginOK)
+         call extract2 (nk,effage,start(i),stop(i),effageOK)
+         call extract3 (nvar,nk,cov,start(i),stop(i),covOK)
+       
 c Estimation 
-	
-	  call EstimWithFrailty(s,n-1,nvar,kOK,nkOK,tauOK,caltimesOK,
+       
+         call EstimWithFrailty(s,n-1,nvar,kOK,nkOK,tauOK,caltimesOK,
      *  gaptimesOK,censoredOK,interceptsOK,slopesOK,lastperrepOK,
      *  perrepindOK,effagebeginOK,effageOK,ndiseff,diseff,covOK,
      *  alphaSeed,betaSeed,xi,Z,offset,rhoFunc,tol,maxiter,maxXi,
      *  estiEnd,control,loglikEnd)
                   
-	  do j=1,nvar+1
-	   estiEndJack(i,j)=estiEnd(j)
-	  end do
-	  estiEndJack(i,nvar+2)=estiEnd(nvar+2) 
-	   
-	end do
-	
-	return
-	
-	END SUBROUTINE
-	
+         do j=1,nvar+1
+          estiEndJack(i,j)=estiEnd(j)
+         end do
+         estiEndJack(i,nvar+2)=estiEnd(nvar+2) 
+          
+       end do
+       
+       return
+       
+       END SUBROUTINE
+       
 
 
-	
+       
         SUBROUTINE extract(n,x,pos,xOK)
-	   implicit none
-	   integer n,pos,i,j
-	   integer x(n),xOk(n-1)
-	   	   
-	   i=1
-	   do j=1,n
-	     if (j.ne.pos) then
-	      xOk(i)=x(j)
-	      i=i+1
-	     end if    	   
-	   end do
-	   return  
-	END SUBROUTINE
-	
-	SUBROUTINE dextract(n,x,pos,xOK)
-	   implicit none
-	   integer n,pos,i,j
-	   double precision x(n),xOk(n-1)
-	   	   
-	   i=1
-	   do j=1,n
-	     if (j.ne.pos) then
-	      xOk(i)=x(j)
-	      i=i+1
-	     end if    	   
-	   end do
-	   return  
-	END SUBROUTINE
-		     
-	
-	SUBROUTINE extract2(n,x,start,stop,xOK)
-	   implicit none
-	   integer n,start,stop,i,j
-	   double precision x(n),xOk(n-(stop-start+1))
-	   	   
-	   i=1
-	   do j=1,n
-	     if ((j.lt.start).or.(j.gt.stop)) then
-	      xOk(i)=x(j)
-	      i=i+1
-	     end if    	   
-	   end do
-	   return  
-	END SUBROUTINE
-	
-	SUBROUTINE extract3(nn,n,x,start,stop,xOK)
-	   implicit none
-	   integer n,nn,start,stop,i,j,k
-	   double precision x(nn,n),xOk(nn,n-(stop-start+1))
-	   	   
-	   do k=1,nn
-	    i=1
-	    do j=1,n
-	     if ((j.lt.start).or.(j.gt.stop)) then
-	      xOk(k,i)=x(k,j)
-	      i=i+1
-	     end if    	   
-	    end do
-	   end do
-	   return  
-	END SUBROUTINE
+          implicit none
+          integer n,pos,i,j
+          integer x(n),xOk(n-1)
+             
+          i=1
+          do j=1,n
+            if (j.ne.pos) then
+             xOk(i)=x(j)
+             i=i+1
+            end if       
+          end do
+          return  
+       END SUBROUTINE
+       
+       SUBROUTINE dextract(n,x,pos,xOK)
+          implicit none
+          integer n,pos,i,j
+          double precision x(n),xOk(n-1)
+             
+          i=1
+          do j=1,n
+            if (j.ne.pos) then
+             xOk(i)=x(j)
+             i=i+1
+            end if      
+          end do
+          return  
+       END SUBROUTINE
+     
+       
+       SUBROUTINE extract2(n,x,start,stop,xOK)
+          implicit none
+          integer n,start,stop,i,j
+          double precision x(n),xOk(n-(stop-start+1))
+             
+          i=1
+          do j=1,n
+            if ((j.lt.start).or.(j.gt.stop)) then
+             xOk(i)=x(j)
+             i=i+1
+            end if       
+          end do
+          return  
+       END SUBROUTINE
+       
+       SUBROUTINE extract3(nn,n,x,start,stop,xOK)
+          implicit none
+          integer n,nn,start,stop,i,j,k
+          double precision x(nn,n),xOk(nn,n-(stop-start+1))
+             
+          do k=1,nn
+           i=1
+           do j=1,n
+            if ((j.lt.start).or.(j.gt.stop)) then
+             xOk(k,i)=x(k,j)
+             i=i+1
+            end if       
+           end do
+          end do
+          return  
+       END SUBROUTINE
 
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC	
-	
-	
-	
-	
-	
-	
-	SUBROUTINE EstimWithFrailty(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+       
+       
+       
+       
+       
+       
+       SUBROUTINE EstimWithFrailty(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *  censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
      *  effage,ndiseff,diseff,cov,alphaSeed,betaSeed,xi,Z,offset,
      *  rhoFunc,tol,maxiter,maxXi,estimEnd,control,loglikEnd)
 
-	implicit none
-	
-	integer n,nvar,rhoFunc,ndiseff,method,searchxi
-	integer k(n),nk,i,j,kiter,search,maxiter,searchNR,kiterNR
-	double precision s,tau(n),caltimes(nk),gaptimes(nk),censored(n),
+       implicit none
+       
+       integer n,nvar,rhoFunc,ndiseff,method,searchxi
+       integer k(n),nk,i,j,kiter,search,maxiter,searchNR,kiterNR
+       double precision s,tau(n),caltimes(nk),gaptimes(nk),censored(n),
      *     intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *     effagebegin(nk),effage(nk),cov(nvar,nk),
      *     alphaSeed,betaSeed(nvar),Z(n),xi,diseff(ndiseff)
 
-	double precision lambdaOld(ndiseff),survOld(ndiseff),
+       double precision lambdaOld(ndiseff),survOld(ndiseff),
      *     lambdaNew(ndiseff),survNew(ndiseff),ZOld(n),xiOld,alphaOld,
      *     betaOld(nvar),AA(n),distAll,tol,ZNew(n),loglik,
      *     estiNew(nvar+1),
@@ -283,61 +283,61 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
      *     GammaLogLikOptim,distAlpha,distBeta,distXi,distZ,distLamb,
      *     deltalambdafuncOld(ndiseff),deltalambdaNew(ndiseff),BB(n)
 
-	double precision estimEnd(nvar+2+n),HUGE,xiratOld,xiratNew,offset(n)
-	real*8 loglikEnd,GammaLogLik,loglikMarg
-	integer control(2),maxXi 
-	
-	integer KK(n),ns(n)  
-	external GammaLogLikOptim,norm
+       double precision estimEnd(nvar+2+n),HUGE,xiratOld,xiratNew,offset(n)
+       real*8 loglikEnd,GammaLogLik,loglikMarg
+       integer control(2),maxXi 
+       
+       integer KK(n),ns(n)  
+       external GammaLogLikOptim,norm
 
-	HUGE=1.0d60
-	
-c	Step 0: Initialization
-	do i=1,n
-	   ZOld(i)=Z(i) 
-	end do
-	xiOld=xi
-	xiratOld=xiOld/(1+xiOld)
-	alphaOld=alphaSeed
-	do i=1,nvar
-	   betaOld(i)=betaSeed(i)
-	end do
+       HUGE=1.0d60
+       
+c       Step 0: Initialization
+       do i=1,n
+          ZOld(i)=Z(i) 
+       end do
+       xiOld=xi
+       xiratOld=xiOld/(1+xiOld)
+       alphaOld=alphaSeed
+       do i=1,nvar
+          betaOld(i)=betaSeed(i)
+       end do
 
-	
+       
 
-	distAll=10.d0
-	kiter=0
-	search=0
+       distAll=10.d0
+       kiter=0
+       search=0
 
 c       Initialize the hazard estimate (same without frailties)
-	
-	call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       
+       call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *  censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
      *  effage,ndiseff,diseff,cov,alphaOld,betaOld,ZOld,offset,
      *  rhoFunc,lambdaOld,deltalambdafuncOld,survOld)
-	
-	
-	call CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       
+       
+       call CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *  censored,intercepts,slopes,lastperrep,perrepind,
      *  effagebegin,effage,ndiseff,diseff,cov,alphaOld,
      *  betaOld,deltalambdafuncOld,ZOld,offset,rhoFunc,KK,AA,BB)
 
 
 c       Start of EM Iteration
-	
+       
       do while ((distAll.gt.tol).and.(kiter.lt.maxiter))
 
-	   kiter=kiter+1
+          kiter=kiter+1
 
 c       Step-1 (E-Step): Given alphahat,betahat,xihat,Lambhat:
 c       obtain new Zhat's
-	   call FrailtyValues(n,xiOld,KK,AA,ZNew)
+          call FrailtyValues(n,xiOld,KK,AA,ZNew)
 
-	   
+          
 c       Step-2 (M-Step#1): Given alphahat,betahat,xihat,Lambhat:
 c       obtain new Lambhat
-	   
-	  call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+          
+         call EstLambSurv(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,effagebegin,
      *    effage,ndiseff,diseff,cov,alphaOld,betaOld,ZNew,offset,
      *    rhoFunc,lambdaNew,deltalambdaNew,survNew)
@@ -345,19 +345,20 @@ c       obtain new Lambhat
 c       Step-3 (M-Step#2): Given Lambhat,xihat,Zhat:
 c       obtain new alphahat,betahat
 
-c       $Newton-Raphson$          		               
+c       $Newton-Raphson$                         
 
                 if (rhoFunc.eq.2) then
 
               call newtraph(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *   	censored,intercepts,slopes,lastperrep,perrepind,
-     *   	effagebegin,effage,cov,alphaOld,betaOld,ZNew,offset,rhoFunc,
-     *   	ns,tol,maxiter,loglik,estiNew,info,searchNR,kiterNR)
+     *         censored,intercepts,slopes,lastperrep,perrepind,
+     *         effagebegin,effage,cov,alphaOld,betaOld,ZNew,offset,
+     *         rhoFunc,ns,tol,maxiter,loglik,estiNew,info,searchNR,
+     *         kiterNR)
 
                      alphaNew=estiNew(1)
-	       do i=1,nvar
-	          betaNew(i)=estiNew(i+1)
-	       end do   
+              do i=1,nvar
+                 betaNew(i)=estiNew(i+1)
+              end do   
             
              else
 
@@ -367,21 +368,21 @@ c       $Newton-Raphson$
      *      ns,tol,maxiter,loglik,estiNew,info,searchNR,kiterNR)
 
                      alphaNew=1.0d0
-	       do i=1,nvar
-	          betaNew(i)=estiNew(i)
-	       end do   
+              do i=1,nvar
+                 betaNew(i)=estiNew(i)
+              end do   
 
                 end if
  
-	   
-	   
+          
+          
 c       Step-4 (M-Step#3): Given Lambhat,Zhat,alphahat,betahat:
 c       obtain new xihat
-	   call CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *   	censored,intercepts,slopes,lastperrep,perrepind,
-     *   	effagebegin,effage,ndiseff,diseff,cov,alphaNew,
-     *   	betaNew,deltalambdaNew,ZNew,offset,rhoFunc,KK,AA,BB)
-	   
+          call CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *      censored,intercepts,slopes,lastperrep,perrepind,
+     *      effagebegin,effage,ndiseff,diseff,cov,alphaNew,
+     *      betaNew,deltalambdaNew,ZNew,offset,rhoFunc,KK,AA,BB)
+          
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCC    Changes here:
@@ -391,368 +392,368 @@ CCCC    return, then MaxWrtXi stopped because of iteration limit.
 CCCC    This is printed directly to R process using the subroutine intpr.
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
            if (maxXi.eq.1) then           
-	     call MaxWrtXi(xiOld,n,KK,AA,BB,tol,xiNew,loglikMarg,
-     *	maxiter,searchxi)
-	   else 
-	     xiNew=GammaLogLikOptim(xiOld,n,KK,AA,BB)
-	   end if
+            call MaxWrtXi(xiOld,n,KK,AA,BB,tol,xiNew,loglikMarg,
+     *            maxiter,searchxi)
+          else 
+            xiNew=GammaLogLikOptim(xiOld,n,KK,AA,BB)
+          end if
 
-c	   if (searchxi.eq.0) then
-c	     call intpr("MaxWrtXi failed, searchxi is:", -1, searchxi, 1)
-c	   end if
-	   if (xiNew.eq.HUGE) then
-	      xiratNew=1
-	   else 
-	      xiratNew=xiNew/(1+xiNew)
-	   end if
+c          if (searchxi.eq.0) then
+c            call intpr("MaxWrtXi failed, searchxi is:", -1, searchxi, 1)
+c          end if
+          if (xiNew.eq.HUGE) then
+             xiratNew=1
+          else 
+             xiratNew=xiNew/(1+xiNew)
+          end if
 
 
-	   
+          
 c       Step-5: Checking for Convergence
-	   distAlpha=norm(1,alphaOld,alphaNew)
-	   distBeta=norm(nvar,betaOld,betaNew)
+          distAlpha=norm(1,alphaOld,alphaNew)
+          distBeta=norm(nvar,betaOld,betaNew)
 c       distance based on xi/(1+xi)
-	   distXi=norm(1,xiratOld,xiratNew)
-         distLamb=norm(ndiseff,lambdaOld,lambdaNew)	   
+          distXi=norm(1,xiratOld,xiratNew)
+         distLamb=norm(ndiseff,lambdaOld,lambdaNew)    
 c       no comparing Z's
 c       distAll=max(max(distBeta,distAlpha),distXi) 
-	 distAll=max(max(max(distLamb,distXi),
-     *	      distBeta),distAlpha) 
-	   
+        distAll=max(max(max(distLamb,distXi),
+     *             distBeta),distAlpha) 
+          
 
 
 c       Update the vectors
-	   alphaOld=alphaNew
-	   do i=1,nvar
-	      betaOld(i)=betaNew(i)
-	   end do
+          alphaOld=alphaNew
+          do i=1,nvar
+             betaOld(i)=betaNew(i)
+          end do
 
-	   xiOld=xiNew
-	   xiratOld=xiratNew
+          xiOld=xiNew
+          xiratOld=xiratNew
 
-	   do i=1,n
-	      ZOld(i)=ZNew(i)
-	   end do          
-	   do i=1,ndiseff
-	      lambdaOld(i)=lambdaNew(i)
-	   end do 
-	 
+          do i=1,n
+             ZOld(i)=ZNew(i)
+          end do          
+          do i=1,ndiseff
+             lambdaOld(i)=lambdaNew(i)
+          end do 
+        
 
-	end do 
-	
-	if (distAll.le.tol) then
-	   search=1
-	end if
-	
+       end do 
+       
+       if (distAll.le.tol) then
+          search=1
+       end if
+       
 
-	control(1)=search
-	control(2)=kiter
-	estimEnd(1)=alphaOld
-	do i=2,nvar+1
-	   estimEnd(i)=betaOld(i-1)
-	end do
-	estimEnd(nvar+2)=xiOld
-	do i=nvar+3,nvar+2+n
-	   estimEnd(i)=ZOld(i-(nvar+2))
-	end do
-	loglikEnd=loglik
-	
-	
-	return  
-	END SUBROUTINE 
-	
-	
-	
-	
-	SUBROUTINE MaxWrtXi(xiOld,n,K,A,B,tol,xiNew,G0,maxiter,search)
-	implicit none
+       control(1)=search
+       control(2)=kiter
+       estimEnd(1)=alphaOld
+       do i=2,nvar+1
+          estimEnd(i)=betaOld(i-1)
+       end do
+       estimEnd(nvar+2)=xiOld
+       do i=nvar+3,nvar+2+n
+          estimEnd(i)=ZOld(i-(nvar+2))
+       end do
+       loglikEnd=loglik
+       
+       
+       return  
+       END SUBROUTINE 
+       
+       
+       
+       
+       SUBROUTINE MaxWrtXi(xiOld,n,K,A,B,tol,xiNew,G0,maxiter,search)
+       implicit none
 
-	integer n,i
-	double precision xiOld,A(n),B(n),tol,dist,etaOld,
+       integer n,i
+       double precision xiOld,A(n),B(n),tol,dist,etaOld,
      *    xiratOld,G0,G1,G2,HUGE,etaNew,xiNew,xiratNew,tol1
-	integer K(n),KK(n), niter, maxiter,search
-	parameter (HUGE=1.0d60) 
+       integer K(n),KK(n), niter, maxiter,search
+       parameter (HUGE=1.0d60) 
 
 c       Maximizing the log-likelihood for Xi
 
-	do i=1,n
-	   KK(i)=K(i)-1
-	end do
+       do i=1,n
+          KK(i)=K(i)-1
+       end do
 
-C	tol1=0.001
-	tol1 = tol
-	niter = 0
-	search = 0
-	
-	dist=100.d0
-	etaOld=dlog(xiOld)
-	xiratOld=xiOld/(1+xiOld)
+C       tol1=0.001
+       tol1 = tol
+       niter = 0
+       search = 0
+       
+       dist=100.d0
+       etaOld=dlog(xiOld)
+       xiratOld=xiOld/(1+xiOld)
 
-	do while ((dist.gt.tol1).and.(niter.lt.maxiter))
-	   niter = niter + 1
-	   call LogLikXi(xiOld,n,KK,A,B,G0,G1,G2)        
-	   etaNew=etaOld-(G1/(G1+xiOld*G2))
-	   xiNew=dexp(etaNew)
-	   if (xiNew.gt.HUGE) then
-	      xiNew=HUGE
-	      search = 1
-	      return
-	   else
-	      xiratNew=xiNew/(1+xiNew)
-	      dist=abs(xiratOld-xiratNew)
-	      xiOld=xiNew
-	      etaOld=etaNew
-	      xiratOld=xiratNew
-	   end if 
+       do while ((dist.gt.tol1).and.(niter.lt.maxiter))
+          niter = niter + 1
+          call LogLikXi(xiOld,n,KK,A,B,G0,G1,G2)        
+          etaNew=etaOld-(G1/(G1+xiOld*G2))
+          xiNew=dexp(etaNew)
+          if (xiNew.gt.HUGE) then
+             xiNew=HUGE
+             search = 1
+             return
+          else
+             xiratNew=xiNew/(1+xiNew)
+             dist=abs(xiratOld-xiratNew)
+             xiOld=xiNew
+             etaOld=etaNew
+             xiratOld=xiratNew
+          end if 
 
-	end do
-	if (dist.le.tol1) then
-	   search=1
-	end if
+       end do
+       if (dist.le.tol1) then
+          search=1
+       end if
 
-	return
-	END SUBROUTINE
+       return
+       END SUBROUTINE
 
-	
+       
 
-	SUBROUTINE LogLikXi(xi,n,K,A,B,G0,G1,G2)
+       SUBROUTINE LogLikXi(xi,n,K,A,B,G0,G1,G2)
 
-	implicit none
+       implicit none
 
 c       Marginal Log likelihood for Xi        
 
-	integer i,j,n
-	double precision xi,A(n),B(n),G0,G1,G2,q1,q2,q3
-	integer K(n)
+       integer i,j,n
+       double precision xi,A(n),B(n),G0,G1,G2,q1,q2,q3
+       integer K(n)
 
-	
-	G0=0.d0
-	G1=0.d0
-	G2=0.d0
-	
-	do i=1,n
-	   q1=0.d0
-	   q2=0.d0
-	   q3=0.d0
-	   if (K(i).gt.0) then
-	      do j=1,K(i)
-		 q1=q1+dlog(xi+dble(j-1))
-		 q2=q2+(1/(xi+dble(j-1)))
-		 q3=q3+(1/((xi+dble(j-1))**2))
-	      end do
-	   end if
-	   G0=G0+q1+(xi*dlog(xi))-((xi+K(i))*dlog(xi+A(i)))+B(i)
-	   G1=G1+q2+(dlog(xi)+1.d0)-dlog(xi+A(i))
-     *	-((xi+dble(K(i)))/(xi+A(i)))
-	    G2=G2-q3+(1/xi)-(1/(xi+A(i)))-
-     *	((A(i)-dble(K(i)))/((xi+A(i))**2))
-	end do
-	
-	return 
-	END SUBROUTINE
+       
+       G0=0.d0
+       G1=0.d0
+       G2=0.d0
+       
+       do i=1,n
+          q1=0.d0
+          q2=0.d0
+          q3=0.d0
+          if (K(i).gt.0) then
+             do j=1,K(i)
+              q1=q1+dlog(xi+dble(j-1))
+              q2=q2+(1/(xi+dble(j-1)))
+              q3=q3+(1/((xi+dble(j-1))**2))
+             end do
+          end if
+          G0=G0+q1+(xi*dlog(xi))-((xi+K(i))*dlog(xi+A(i)))+B(i)
+          G1=G1+q2+(dlog(xi)+1.d0)-dlog(xi+A(i))
+     *       -((xi+dble(K(i)))/(xi+A(i)))
+           G2=G2-q3+(1/xi)-(1/(xi+A(i)))-
+     *       ((A(i)-dble(K(i)))/((xi+A(i))**2))
+       end do
+       
+       return 
+       END SUBROUTINE
       
 
 
-	REAL*8 FUNCTION LogLikXi2(xi,n,K,A,B)
+       REAL*8 FUNCTION LogLikXi2(xi,n,K,A,B)
 
-	implicit none
+       implicit none
 
 c       Marginal Log likelihood for Xi        
 
-	integer i,j,n
-	double precision xi,A(n),B(n),G0,q1
-	integer K(n)
+       integer i,j,n
+       double precision xi,A(n),B(n),G0,q1
+       integer K(n)
 
-	
-	G0=0.d0
-	
-	do i=1,n
-	   q1=0.d0
-	   if (K(i).gt.0) then
-	      do j=1,K(i)
-		 q1=q1+dlog(xi+dble(j-1))
-	      end do
-	   end if
-	   G0=G0+q1+(xi*dlog(xi))-((xi+K(i))*dlog(xi+A(i)))+B(i)
-	end do
-	
-	LogLikXi2=-G0
+       
+       G0=0.d0
+       
+       do i=1,n
+          q1=0.d0
+          if (K(i).gt.0) then
+             do j=1,K(i)
+              q1=q1+dlog(xi+dble(j-1))
+             end do
+          end if
+          G0=G0+q1+(xi*dlog(xi))-((xi+K(i))*dlog(xi+A(i)))+B(i)
+       end do
+       
+       LogLikXi2=-G0
 
-	return 
-	END FUNCTION
-	
-	
-	DOUBLE PRECISION FUNCTION GammaLogLikOptim(seedXi,n,K,A,B)
+       return 
+       END FUNCTION
+       
+       
+       DOUBLE PRECISION FUNCTION GammaLogLikOptim(seedXi,n,K,A,B)
 
-	implicit none
-	
-	integer n,i
-	double precision seedXi,A(n),B(n),HUGE
-	integer K(n),KK(n)
-	
-	real*8 xmin,LogLikXi2
-	external LogLikXi2
+       implicit none
+       
+       integer n,i
+       double precision seedXi,A(n),B(n),HUGE
+       integer K(n),KK(n)
+       
+       real*8 xmin,LogLikXi2
+       external LogLikXi2
 
-	real*8 ax,bx,cx,fa,fb,fc,temp
+       real*8 ax,bx,cx,fa,fb,fc,temp
 
-	parameter (HUGE=1.d030)
+       parameter (HUGE=1.d030)
 
-	do i=1,n
-	   KK(i)=K(i)-1
-	end do
-	
-	ax=0.d-10
-	bx=700.d0
-	
-	call mnbrak(ax,bx,cx,fa,fb,fc,LogLikXi2,n,KK,A,B)
+       do i=1,n
+          KK(i)=K(i)-1
+       end do
+       
+       ax=0.d-10
+       bx=700.d0
+       
+       call mnbrak(ax,bx,cx,fa,fb,fc,LogLikXi2,n,KK,A,B)
 
-	call brent(ax,bx,cx,LogLikXi2,1.d-6,xmin,n,KK,A,B)
-	
+       call brent(ax,bx,cx,LogLikXi2,1.d-6,xmin,n,KK,A,B)
+       
 
-	if (xmin.gt.HUGE) then
-	   GammaLogLikOptim=HUGE
-	   return 
-	else
-	   GammaLogLikOptim=xmin
-	   return
-	end if
-	
-	
-	END FUNCTION
-	
-	
-	
-	
-	
-	SUBROUTINE FrailtyValues(n,xi,K,A,Z)
-	
-	implicit none
-	
+       if (xmin.gt.HUGE) then
+          GammaLogLikOptim=HUGE
+          return 
+       else
+          GammaLogLikOptim=xmin
+          return
+       end if
+       
+       
+       END FUNCTION
+       
+       
+       
+       
+       
+       SUBROUTINE FrailtyValues(n,xi,K,A,Z)
+       
+       implicit none
+       
 c       Estimates of the frailties values
-c       We need to adjust K to reflect that 0 is included in count 	
-	integer n,i
-	double precision xi,A(n),Z(n),HUGE
-	integer K(n),KK(n)
-	parameter (HUGE=1.0d60)
+c       We need to adjust K to reflect that 0 is included in count  
+       integer n,i
+       double precision xi,A(n),Z(n),HUGE
+       integer K(n),KK(n)
+       parameter (HUGE=1.0d60)
 
-	do i=1,n
-	   KK(i)=K(i)-1
-	   Z(i)=0.d0
-	end do
-	
-	if (xi.eq.HUGE) then
-	   do i=1,n
-	      Z(i)=1.d0 
-	   end do
-	   
-	else
+       do i=1,n
+          KK(i)=K(i)-1
+          Z(i)=0.d0
+       end do
+       
+       if (xi.eq.HUGE) then
+          do i=1,n
+             Z(i)=1.d0 
+          end do
+          
+       else
 
-	   do i=1,n
-	      Z(i)=(xi+dble(KK(i)))/(xi+A(i))
-	   end do
-	   
-	end if
+          do i=1,n
+             Z(i)=(xi+dble(KK(i)))/(xi+A(i))
+          end do
+          
+       end if
 
-	return          
-	END SUBROUTINE
-
-
+       return          
+       END SUBROUTINE
 
 
-	SUBROUTINE CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+
+
+       SUBROUTINE CompAK(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,
      *    effagebegin,effage,ndiseff,diseff,cov,alpha,
      *    beta,deltalambdafunc,Z,offset,rhoFunc,KK,AA,BB)
-	implicit none
+       implicit none
 
-	integer n,nvar,rhoFunc,ndiseff
-	integer k(n),nk,i,j,r,t,u
-	double precision s,tau(n),caltimes(nk),gaptimes(nk),
+       integer n,nvar,rhoFunc,ndiseff
+       integer k(n),nk,i,j,r,t,u
+       double precision s,tau(n),caltimes(nk),gaptimes(nk),
      *    censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),alpha,
      *    beta(nvar),Z(n),xi,diseff(ndiseff),deltalambdafunc(ndiseff)
-	
-	double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
+       
+       double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
      *    Gr2S0A1Be(nvar),
      .       Gr2S0Be(nvar,nvar),Ysubj(n)
-	
-	double precision AA(n),BB(n),rho,psi,
+       
+       double precision AA(n),BB(n),rho,psi,
      *    covariate(nvar),effageOK(200)
-	integer KK(n),pos
+       integer KK(n),pos
 
 
 c       Computes Ki's and Ai's to obtain new Z-values
-       	
-	do i=1,n
-	   AA(i)=0.d0
-	end do
+       
+       do i=1,n
+          AA(i)=0.d0
+       end do
 
-	call nsm(s,n,nk,caltimes,k,KK)
+       call nsm(s,n,nk,caltimes,k,KK)
 
-	do i=1,ndiseff
-	   
+       do i=1,ndiseff
+          
           call AtRisk(s,KK,diseff(i),n,nvar,nk,k,tau,caltimes,
-     *	   gaptimes,censored,intercepts,slopes,lastperrep,
-     *	   perrepind,effagebegin,effage,cov,alpha,beta,Z,offset,
+     *     gaptimes,censored,intercepts,slopes,lastperrep,
+     *     perrepind,effagebegin,effage,cov,alpha,beta,Z,offset,
      *     rhoFunc,Ysubj,S0,GrS0A1,GrS0Be,Gr2S0A1,Gr2S0A1Be,Gr2S0Be)
-	   
-	   do j=1,n
-	      AA(j)=AA(j)+(Ysubj(j)*deltalambdafunc(i))
-	   end do
+          
+          do j=1,n
+             AA(j)=AA(j)+(Ysubj(j)*deltalambdafunc(i))
+          end do
 
-       	end do                                                                
-	
-	do i=1,n
-	   BB(i)=0.d0
-	end do
-	
+        end do                                                                
+       
+       do i=1,n
+          BB(i)=0.d0
+       end do
+       
 
-	pos=1
+       pos=1
 
-	do i=1,n
-	   do r=1,k(i)
-	      do t=1,nvar
-		 covariate(t)=cov(t,pos)           
-	      end do
-	      effageOK(r)=effage(pos)
-	      pos=pos+1
-	   end do
+       do i=1,n
+          do r=1,k(i)
+             do t=1,nvar
+              covariate(t)=cov(t,pos)           
+             end do
+             effageOK(r)=effage(pos)
+             pos=pos+1
+          end do
 
-	   if (KK(i).gt.1) then
-	      do j=2,KK(i)
-		 BB(i)=BB(i)+dlog(rho(j-2,alpha,rhoFunc))+
-     *	      dlog(psi(nvar,covariate,beta,offset(i)))
-		 do u=1,ndiseff
-		    if (effageOK(j).eq.diseff(u)) then
-		       BB(i)=BB(i)+dlog(deltalambdafunc(u))
-		       goto 3000
-		    end if
-		 end do 
-		 
- 3000	      end do 
-	      
-	   end if
-	   
-	end do       
+          if (KK(i).gt.1) then
+             do j=2,KK(i)
+               BB(i)=BB(i)+dlog(rho(j-2,alpha,rhoFunc))+
+     *          dlog(psi(nvar,covariate,beta,offset(i)))
+               do u=1,ndiseff
+           if (effageOK(j).eq.diseff(u)) then
+              BB(i)=BB(i)+dlog(deltalambdafunc(u))
+              goto 3000
+            end if
+          end do 
+        
+ 3000       end do 
+             
+          end if
+          
+       end do       
 
-	return      
-	END SUBROUTINE 
-
-
+       return      
+       END SUBROUTINE 
 
 
-	SUBROUTINE newtraph(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+
+
+       SUBROUTINE newtraph(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,
      *    effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
      *    ns,tol,maxiter,loglik,estiEnd,info,searchBoth,
      *    kkiter)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j
-	double precision s,tau(n),caltimes(nk),gaptimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j
+       double precision s,tau(n),caltimes(nk),gaptimes(nk),
      *    censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),
@@ -760,131 +761,131 @@ c       Computes Ki's and Ai's to obtain new Z-values
      *    loglik,score(nvar+1),info(nvar+1,nvar+1),
      *    scorealpha,infoalpha,scorebeta(nvar),
      *    infoalphabeta(nvar),infobeta(nvar,nvar)
-	
-	
-	double precision estiOld(nvar+1),estiNew(nvar+1),
+       
+       
+       double precision estiOld(nvar+1),estiNew(nvar+1),
      *    DecDirec(nvar+1),
      *    distance,tol,alphaOld,betaOld(nvar),alpha,beta(nvar),
      *    estiNewAlpha,estiNewBeta(nvar),tol1,estiEnd(nvar+1)
-	
-	integer ns(n),kkiter,maxiter,
+       
+       integer ns(n),kkiter,maxiter,
      *    search,searchAlpha,searchBeta,searchBoth,
      *    kkitera, kkiterb, kkiterab
 
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C	call realpr("loglik", -1, loglik, 1)
-C	call intpr("kkiter", -1, kkiter, 1)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC	
+C    call realpr("loglik", -1, loglik, 1)
+C    call intpr("kkiter", -1, kkiter, 1)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-	tol1=100.0*tol
+       tol1=100.0*tol
 
 c       search:
 c       121: problems with alpha step
 c       122: problems with beta step
 c       0: no convergence both 
 c       1: OK
- 	
-	
-c	initialization 
-	distance=1000.d0
-	kkiter=1
+        
+       
+c       initialization 
+       distance=1000.d0
+       kkiter=1
 
-	alphaOld=alphaSeed
-	do i=1,nvar
-	   betaOld(i)=betaSeed(i)
-	end do
-	search=0   
+       alphaOld=alphaSeed
+       do i=1,nvar
+          betaOld(i)=betaSeed(i)
+       end do
+       search=0   
 
-	
-c       Newton-Raphson procedure alpha and beta	 
-	do while ((distance.gt.tol1).and.(kkiter.lt.maxiter)) 
-	   
-	   kkiter=kkiter+1
-c       Maximum Alpha	 
-	   
-	   estiOld(1)=alphaOld
-	   do i=2,nvar+1
-	      estiOld(i)=betaOld(i-1)
-	   end do
-	   
-	   call newtraphAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *	censored,intercepts,slopes,lastperrep,perrepind,
-     *	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
-     *	ns,tol1,maxiter,estiNewAlpha,searchAlpha,kkitera)
-	   
-	   alphaOld=estiNewAlpha		
-	   
-	   if (searchAlpha.ne.1) then
-	      search=121  		
-	   end if         
+       
+c       Newton-Raphson procedure alpha and beta 
+       do while ((distance.gt.tol1).and.(kkiter.lt.maxiter)) 
+          
+          kkiter=kkiter+1
+c       Maximum Alpha 
+          
+          estiOld(1)=alphaOld
+          do i=2,nvar+1
+             estiOld(i)=betaOld(i-1)
+          end do
+          
+          call newtraphAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *       censored,intercepts,slopes,lastperrep,perrepind,
+     *       effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
+     *       ns,tol1,maxiter,estiNewAlpha,searchAlpha,kkitera)
+          
+          alphaOld=estiNewAlpha
+          
+          if (searchAlpha.ne.1) then
+             search=121  
+          end if         
 
-c       Maximum Beta	 		
-	   call newtraphBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *	censored,intercepts,slopes,lastperrep,perrepind,
-     *	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
-     *	ns,tol1,maxiter,estiNewBeta,searchBeta,kkiterb)
-	   
-	   
-	   do i=1,nvar
-	      betaOld(i)=estiNewBeta(i)
-	   end do			
-	   
-	   if (searchBeta.ne.1) then
-	      search=122  		
-	   end if         
-
-
-	   estiNew(1)=alphaOld
-	   do i=2,nvar+1
-	      estiNew(i)=betaOld(i-1)
-	   end do
+c       Maximum Beta
+          call newtraphBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *      censored,intercepts,slopes,lastperrep,perrepind,
+     *      effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
+     *      ns,tol1,maxiter,estiNewBeta,searchBeta,kkiterb)
+          
+          
+          do i=1,nvar
+             betaOld(i)=estiNewBeta(i)
+          end do
+          
+          if (searchBeta.ne.1) then
+             search=122  
+          end if         
 
 
-c       stopping rule	    
-	   distance=(estiNew(1)-estiOld(1))**2
-	   do i=2,nvar+1
-	      distance=distance+(estiNew(i)-estiOld(i))**2
-	   end do
-	   distance=distance**0.5
+          estiNew(1)=alphaOld
+          do i=2,nvar+1
+             estiNew(i)=betaOld(i-1)
+          end do
 
-	end do 
 
-	if (distance.le.tol1) then
-	   search=1
-	end if
+c       stopping rule    
+          distance=(estiNew(1)-estiOld(1))**2
+          do i=2,nvar+1
+             distance=distance+(estiNew(i)-estiOld(i))**2
+          end do
+          distance=distance**0.5
 
-	alpha=estiNew(1)
-	do i=1,nvar
-	   beta(i)=estiNew(i+1)
-	end do
-	
+       end do 
+
+       if (distance.le.tol1) then
+          search=1
+       end if
+
+       alpha=estiNew(1)
+       do i=1,nvar
+          beta(i)=estiNew(i+1)
+       end do
+       
 
 c       Maximum both
-	if (search.eq.1) then
-	   call newtraphBoth(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *	censored,intercepts,slopes,lastperrep,perrepind,
-     *	effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
-     *	ns,tol,maxiter,loglik,estiEnd,
-     *	info,searchBoth,kkiterab)
+       if (search.eq.1) then
+          call newtraphBoth(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *       censored,intercepts,slopes,lastperrep,perrepind,
+     *       effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
+     *       ns,tol,maxiter,loglik,estiEnd,
+     *       info,searchBoth,kkiterab)
 
-	end if
-	
-	return
-	END SUBROUTINE 
+       end if
+       
+       return
+       END SUBROUTINE 
 
 
-	
-	SUBROUTINE newtraphBoth(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       
+       SUBROUTINE newtraphBoth(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *   censored,intercepts,slopes,lastperrep,perrepind,
      *   effagebegin,effage,cov,alphaSeed,betaSeed,Z,offset,rhoFunc,
      *   ns,tol,maxiter,loglik,estiNew,info,search,kiter)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j
-	double precision s,tau(n),caltimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j
+       double precision s,tau(n),caltimes(nk),
      *    gaptimes(nk),censored(n),offset(n),
      *   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *   effagebegin(nk),effage(nk),cov(nvar,nk),
@@ -892,97 +893,97 @@ c       Maximum both
      *   loglik,score(nvar+1),info(nvar+1,nvar+1),
      *   scorealpha,infoalpha,scorebeta(nvar),
      *   infoalphabeta(nvar),infobeta(nvar,nvar)
-	
-	
-	double precision estiOld(nvar+1),estiNew(nvar+1),
+       
+       
+       double precision estiOld(nvar+1),estiNew(nvar+1),
      *    DecDirec(nvar+1),
      *   distance,tol,alphaOld,betaOld(nvar),
      *   dinc,wa(nvar+1,nvar+1)
-	
-	integer ns(n),kiter,maxiter,search
-	real det
-	
-	
-c	initialization 
-	distance=1000.d0
-	kiter=1
-	alphaOld=alphaSeed
-	do i=1,nvar
-	   betaOld(i)=betaSeed(i)
-	end do
-	search=0   
+       
+       integer ns(n),kiter,maxiter,search
+       real det
+       
+       
+c       initialization 
+       distance=1000.d0
+       kiter=1
+       alphaOld=alphaSeed
+       do i=1,nvar
+          betaOld(i)=betaSeed(i)
+       end do
+       search=0   
 
 
-	
-c       Newton-Raphson procedure	 
-	do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
-	   
-	   kiter=kiter+1
-	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     * 	censored,intercepts,slopes,lastperrep,perrepind,
-     * 	effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
-     * 	ns,loglik,score,info,scorealpha,scorebeta,
-     * 	infoalpha,infobeta)
-	   
-	   
-	   estiOld(1)=alphaOld
-	   do i=2,nvar+1
-	      estiOld(i)=betaOld(i-1)
-	   end do
-	   
+       
+c       Newton-Raphson procedure 
+       do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
+          
+          kiter=kiter+1
+          call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *        censored,intercepts,slopes,lastperrep,perrepind,
+     *        effagebegin,effage,cov,alphaOld,betaOld,Z,offset,rhoFunc,
+     *        ns,loglik,score,info,scorealpha,scorebeta,
+     *        infoalpha,infobeta)
+          
+          
+          estiOld(1)=alphaOld
+          do i=2,nvar+1
+             estiOld(i)=betaOld(i-1)
+          end do
+          
 
           call MATINV(nvar+1,info,det)  
-	   
-	   
+          
+          
 c       computes the descent direction 
-	   do i=1,nvar+1
-	      DecDirec(i)=0.d0
-	   end do
-	   do i=1,nvar+1
-	      do j=1,nvar+1
-		 DecDirec(i)=DecDirec(i)+info(i,j)*score(j)
-	      end do
-	   end do   
-	   
-	   do i=1,nvar+1
-	      estiNew(i)=estiOld(i)+DecDirec(i)
-	   end do
-	   
-c       stopping rule	    
-	   distance=(estiNew(1)-estiOld(1))**2
-	   do i=2,nvar+1
-	      distance=distance+(estiNew(i)-estiOld(i))**2
-	   end do
-	   distance=distance**0.5
+          do i=1,nvar+1
+             DecDirec(i)=0.d0
+          end do
+          do i=1,nvar+1
+             do j=1,nvar+1
+              DecDirec(i)=DecDirec(i)+info(i,j)*score(j)
+             end do
+          end do   
+          
+          do i=1,nvar+1
+             estiNew(i)=estiOld(i)+DecDirec(i)
+          end do
+          
+c       stopping rule    
+          distance=(estiNew(1)-estiOld(1))**2
+          do i=2,nvar+1
+             distance=distance+(estiNew(i)-estiOld(i))**2
+          end do
+          distance=distance**0.5
 
-	   alphaOld=estiNew(1)
-	   do i=1,nvar
-	      betaOld(i)=estiNew(i+1)
-	   end do
-	   
-	   
-	   if (distance.le.tol) then
-	      search=1
-	   end if
+          alphaOld=estiNew(1)
+          do i=1,nvar
+             betaOld(i)=estiNew(i+1)
+          end do
+          
+          
+          if (distance.le.tol) then
+             search=1
+          end if
 
-	end do 
-	
-	return
-	END SUBROUTINE 
+       end do 
+       
+       return
+       END SUBROUTINE 
 
-	
-	
-	SUBROUTINE newtraphAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       
+       
+       SUBROUTINE newtraphAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *   censored,intercepts,slopes,lastperrep,perrepind,
      *   effagebegin,effage,cov,alphaSeed,
      *   betaSeed,Z,offset,rhoFunc,
      *   ns,tol,maxiter,estiNew,search,kiter)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j
-	double precision s,tau(n),caltimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j
+       double precision s,tau(n),caltimes(nk),
      *    gaptimes(nk),censored(n),offset(n),
      *   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *   effagebegin(nk),effage(nk),cov(nvar,nk),
@@ -990,66 +991,66 @@ c       stopping rule
      *   loglik,score(nvar+1),info(nvar+1,nvar+1),
      *   scorealpha,infoalpha,scorebeta(nvar),
      *   infoalphabeta(nvar),infobeta(nvar,nvar)
-	
-	
-	double precision estiOld,estiNew,distance,tol,alphaOld
-	
-	integer ns(n),kiter,maxiter,search
-	real det
-	
-	
-	
-c	initialization 
-	distance=1000.d0
-	kiter=1
-	alphaOld=alphaSeed
-	search=0   
+       
+       
+       double precision estiOld,estiNew,distance,tol,alphaOld
+       
+       integer ns(n),kiter,maxiter,search
+       real det
+       
+       
+       
+c       initialization 
+       distance=1000.d0
+       kiter=1
+       alphaOld=alphaSeed
+       search=0   
 
 
-	
-c       Newton-Raphson procedure	 
-	do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
-	   
-	   kiter=kiter+1
-	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     * 	censored,intercepts,slopes,lastperrep,perrepind,
-     * 	effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
-     * 	ns,loglik,score,info,scorealpha,scorebeta,
-     * 	infoalpha,infobeta)
-	   
-	   
-	   estiOld=alphaOld
-	   
-	   estiNew=estiOld+scorealpha/infoalpha
-	   
-	   
-c       stopping rule	    
-	   distance=abs(estiNew-estiOld)
+       
+c       Newton-Raphson procedure 
+       do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
+          
+          kiter=kiter+1
+          call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *        censored,intercepts,slopes,lastperrep,perrepind,
+     *        effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
+     *        ns,loglik,score,info,scorealpha,scorebeta,
+     *        infoalpha,infobeta)
+          
+          
+          estiOld=alphaOld
+          
+          estiNew=estiOld+scorealpha/infoalpha
+          
+          
+c       stopping rule    
+          distance=abs(estiNew-estiOld)
 
-	   alphaOld=estiNew
-	   
-	   
-	   if (distance.le.tol) then
-	      search=1
-	   end if
+          alphaOld=estiNew
+          
+          
+          if (distance.le.tol) then
+             search=1
+          end if
 
-	end do 
-	
-	return
-	END SUBROUTINE 
+       end do 
+       
+       return
+       END SUBROUTINE 
 
 
-	SUBROUTINE newtraphBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       SUBROUTINE newtraphBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,
      *    effagebegin,effage,cov,alphaSeed,
      *    betaSeed,Z,offset,rhoFunc,
      *    ns,tol,maxiter,estiNew,search,kiter)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j
-	double precision s,tau(n),caltimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j
+       double precision s,tau(n),caltimes(nk),
      *    gaptimes(nk),censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),
@@ -1057,77 +1058,77 @@ c       stopping rule
      *    loglik,score(nvar+1),info(nvar+1,nvar+1),
      *    scorealpha,infoalpha,scorebeta(nvar),
      *    infoalphabeta(nvar),infobeta(nvar,nvar)
-	
-	
-	double precision estiOld(nvar),estiNew(nvar),DecDirec(nvar),
+       
+       
+       double precision estiOld(nvar),estiNew(nvar),DecDirec(nvar),
      *    distance,tol,betaOld(nvar)
-	
-	integer ns(n),kiter,maxiter,search
-	real det
-	
-	
-c	initialization 
-	distance=1000.d0
-	kiter=1
-	do i=1,nvar
-	   betaOld(i)=betaSeed(i)
-	end do
-	search=0   
+       
+       integer ns(n),kiter,maxiter,search
+       real det
+       
+       
+c       initialization 
+       distance=1000.d0
+       kiter=1
+       do i=1,nvar
+          betaOld(i)=betaSeed(i)
+       end do
+       search=0   
 
         
-	
-c       Newton-Raphson procedure	 
-	do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
-	   
-	   kiter=kiter+1
-	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *  	censored,intercepts,slopes,lastperrep,perrepind,
-     *  	effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
-     *  	ns,loglik,score,info,scorealpha,scorebeta,
-     *  	infoalpha,infobeta)
-	   
-	   
-	   do i=1,nvar
-	      estiOld(i)=betaOld(i)
-	   end do
-	   
-	   
-	   call MATINV(nvar,infobeta,det)	
-	   
+       
+c       Newton-Raphson procedure 
+       do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
+          
+          kiter=kiter+1
+          call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *      censored,intercepts,slopes,lastperrep,perrepind,
+     *      effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
+     *      ns,loglik,score,info,scorealpha,scorebeta,
+     *      infoalpha,infobeta)
+          
+          
+          do i=1,nvar
+             estiOld(i)=betaOld(i)
+          end do
+          
+          
+          call MATINV(nvar,infobeta,det)
+          
 c       computes the descent direction 
-	   do i=1,nvar
-	      DecDirec(i)=0.d0
-	   end do
-	   do i=1,nvar
-	      do j=1,nvar
-		 DecDirec(i)=DecDirec(i)+infobeta(i,j)*scorebeta(j)
-	      end do
-	   end do   
-	   
+          do i=1,nvar
+             DecDirec(i)=0.d0
+          end do
+          do i=1,nvar
+             do j=1,nvar
+              DecDirec(i)=DecDirec(i)+infobeta(i,j)*scorebeta(j)
+             end do
+          end do   
+          
 
-	   do i=1,nvar
-	      estiNew(i)=estiOld(i)+DecDirec(i)
-	   end do
-	   
-c       stopping rule	    
-	   distance=(estiNew(1)-estiOld(1))**2
-	   do i=2,nvar
-	      distance=distance+(estiNew(i)-estiOld(i))**2
-	   end do
-	   distance=distance**0.5
+          do i=1,nvar
+             estiNew(i)=estiOld(i)+DecDirec(i)
+          end do
+          
+c       stopping rule    
+          distance=(estiNew(1)-estiOld(1))**2
+          do i=2,nvar
+             distance=distance+(estiNew(i)-estiOld(i))**2
+          end do
+          distance=distance**0.5
 
-	   
-	   do i=1,nvar
-	      betaOld(i)=estiNew(i)
-	   end do
-	end do 
-	
-	if (distance.le.tol) then
-	   search=1
-	end if
-	
-	return
-	END SUBROUTINE 
+          
+          do i=1,nvar
+             betaOld(i)=estiNew(i)
+          end do
+       end do 
+       
+       if (distance.le.tol) then
+          search=1
+       end if
+       
+       return
+       END SUBROUTINE 
 
 
 
@@ -1136,22 +1137,22 @@ C
 C             subroutines for rho=1 and for no covariates (no implemented this last one)
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-	
+
 
 cccc ----    rho=1
 
-	SUBROUTINE nrBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       SUBROUTINE nrBeta(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *    censored,intercepts,slopes,lastperrep,perrepind,
      *    effagebegin,effage,cov,alphaSeed,
      *    betaSeed,Z,offset,rhoFunc,
      *    ns,tol,maxiter,loglik,estiNew,infobeta,search,kiter)
 
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j
-	double precision s,tau(n),caltimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j
+       double precision s,tau(n),caltimes(nk),
      *    gaptimes(nk),censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),
@@ -1159,93 +1160,93 @@ cccc ----    rho=1
      *    loglik,score(nvar+1),info(nvar+1,nvar+1),
      *    scorealpha,infoalpha,scorebeta(nvar),
      *    infoalphabeta(nvar),infobeta(nvar,nvar)
-	
-	
-	double precision estiOld(nvar),estiNew(nvar),DecDirec(nvar),
+       
+       
+       double precision estiOld(nvar),estiNew(nvar),DecDirec(nvar),
      *    distance,tol,betaOld(nvar)
-	
-	integer ns(n),kiter,maxiter,search
-	real det
-	
-	
-c	initialization 
-	distance=1000.d0
-	kiter=1
-	do i=1,nvar
-	   betaOld(i)=betaSeed(i)
-	end do
-	search=0   
+       
+       integer ns(n),kiter,maxiter,search
+       real det
+       
+       
+c       initialization 
+       distance=1000.d0
+       kiter=1
+       do i=1,nvar
+          betaOld(i)=betaSeed(i)
+       end do
+       search=0   
 
         
-	
-c       Newton-Raphson procedure	 
-	do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
-	   
-	   kiter=kiter+1
-	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     *  	censored,intercepts,slopes,lastperrep,perrepind,
-     *  	effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
-     *  	ns,loglik,score,info,scorealpha,scorebeta,
-     *  	infoalpha,infobeta)
-	   
-	   
+       
+c       Newton-Raphson procedure 
+       do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
+          
+          kiter=kiter+1
+          call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *      censored,intercepts,slopes,lastperrep,perrepind,
+     *      effagebegin,effage,cov,alphaSeed,betaOld,Z,offset,rhoFunc,
+     *      ns,loglik,score,info,scorealpha,scorebeta,
+     *      infoalpha,infobeta)
+          
+          
                  do i=1,nvar
-	      estiOld(i)=betaOld(i)
-	   end do
-	   
-	   
-	   call MATINV(nvar,infobeta,det)	
-	   
+             estiOld(i)=betaOld(i)
+          end do
+          
+          
+          call MATINV(nvar,infobeta,det)
+          
 c       computes the descent direction 
-	   do i=1,nvar
-	      DecDirec(i)=0.d0
-	   end do
-	   do i=1,nvar
-	      do j=1,nvar
-		 DecDirec(i)=DecDirec(i)+infobeta(i,j)*scorebeta(j)
-	      end do
-	   end do   
-	   
+          do i=1,nvar
+             DecDirec(i)=0.d0
+          end do
+          do i=1,nvar
+             do j=1,nvar
+              DecDirec(i)=DecDirec(i)+infobeta(i,j)*scorebeta(j)
+             end do
+          end do   
+          
 
-	   do i=1,nvar
-	      estiNew(i)=estiOld(i)+DecDirec(i)
-	   end do
-	   
-c       stopping rule	    
-	   distance=(estiNew(1)-estiOld(1))**2
-	   do i=2,nvar
-	      distance=distance+(estiNew(i)-estiOld(i))**2
-	   end do
-	   distance=distance**0.5
+          do i=1,nvar
+             estiNew(i)=estiOld(i)+DecDirec(i)
+          end do
+          
+c       stopping rule    
+          distance=(estiNew(1)-estiOld(1))**2
+          do i=2,nvar
+             distance=distance+(estiNew(i)-estiOld(i))**2
+          end do
+          distance=distance**0.5
 
-	   
-	   do i=1,nvar
-	      betaOld(i)=estiNew(i)
-	   end do
-	end do 
-	
-	if (distance.le.tol) then
-	   search=1
-	end if
-	
-	return
-	END SUBROUTINE 
+          
+          do i=1,nvar
+             betaOld(i)=estiNew(i)
+          end do
+       end do 
+       
+       if (distance.le.tol) then
+          search=1
+       end if
+       
+       return
+       END SUBROUTINE 
 
 
 
 ccc --------  No covariates
 
-	SUBROUTINE nrAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+       SUBROUTINE nrAlpha(s,n,nvar,k,nk,tau,caltimes,gaptimes,
      *   censored,intercepts,slopes,lastperrep,perrepind,
      *   effagebegin,effage,cov,alphaSeed,
      *   betaSeed,Z,offset,rhoFunc,
      *   ns,tol,maxiter,loglik,estiNew,infoalpha,search,kiter)
-	
-	implicit none
-	
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j
-	double precision s,tau(n),caltimes(nk),
+       
+       implicit none
+       
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j
+       double precision s,tau(n),caltimes(nk),
      *    gaptimes(nk),censored(n),offset(n),
      *   intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *   effagebegin(nk),effage(nk),cov(nvar,nk),
@@ -1253,53 +1254,53 @@ ccc --------  No covariates
      *   loglik,score(nvar+1),info(nvar+1,nvar+1),
      *   scorealpha,infoalpha,scorebeta(nvar),
      *   infoalphabeta(nvar),infobeta(nvar,nvar)
-	
-	
-	double precision estiOld,estiNew,distance,tol,alphaOld
-	
-	integer ns(n),kiter,maxiter,search
-	real det
-	
-	
-	
-c	initialization 
-	distance=1000.d0
-	kiter=1
-	alphaOld=alphaSeed
-	search=0   
+       
+       
+       double precision estiOld,estiNew,distance,tol,alphaOld
+       
+       integer ns(n),kiter,maxiter,search
+       real det
+       
+       
+       
+c       initialization 
+       distance=1000.d0
+       kiter=1
+       alphaOld=alphaSeed
+       search=0   
 
 
-	
-c       Newton-Raphson procedure	 
-	do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
-	   
-	   kiter=kiter+1
-	   call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     * 	censored,intercepts,slopes,lastperrep,perrepind,
-     * 	effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
-     * 	ns,loglik,score,info,scorealpha,scorebeta,
-     * 	infoalpha,infobeta)
-	   
-	   
-	   estiOld=alphaOld
-	   
-	   estiNew=estiOld+scorealpha/infoalpha
-	   
-	   
-c       stopping rule	    
-	   distance=abs(estiNew-estiOld)
+       
+c       Newton-Raphson procedure 
+       do while ((distance.gt.tol).and.(kiter.lt.maxiter)) 
+          
+          kiter=kiter+1
+          call scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     *        censored,intercepts,slopes,lastperrep,perrepind,
+     *        effagebegin,effage,cov,alphaOld,betaSeed,Z,offset,rhoFunc,
+     *        ns,loglik,score,info,scorealpha,scorebeta,
+     *        infoalpha,infobeta)
+          
+          
+          estiOld=alphaOld
+          
+          estiNew=estiOld+scorealpha/infoalpha
+          
+          
+c       stopping rule    
+          distance=abs(estiNew-estiOld)
 
-	   alphaOld=estiNew
-	   
-	   
-	   if (distance.le.tol) then
-	      search=1
-	   end if
+          alphaOld=estiNew
+          
+          
+          if (distance.le.tol) then
+             search=1
+          end if
 
-	end do 
-	
-	return
-	END SUBROUTINE 
+       end do 
+       
+       return
+       END SUBROUTINE 
 
 
 
@@ -1315,40 +1316,40 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       
         implicit none
 
-	integer n,nvar,rhoFunc
-	integer k(n),nk,i,j,ndiseff,ns(n)
-	double precision s,tau(n),caltimes(nk),
+       integer n,nvar,rhoFunc
+       integer k(n),nk,i,j,ndiseff,ns(n)
+       double precision s,tau(n),caltimes(nk),
      *   gaptimes(nk),censored(n),offset(n),
      *    intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      *    effagebegin(nk),effage(nk),cov(nvar,nk),
      *    alpha,beta(nvar),Z(n),ONE,ZERO,diseff(ndiseff),
      *    DeltaNst(ndiseff),S0st(ndiseff) 
       
-	double precision GrS0A1,Gr2S0A1,GrS0Be(nvar),Gr2S0A1Be(nvar),
+       double precision GrS0A1,Gr2S0A1,GrS0Be(nvar),Gr2S0A1Be(nvar),
      .       Gr2S0Be(nvar,nvar),Ysubj(n)
-	
-	double precision lambdafunc(ndiseff),survfunc(ndiseff),dellamb,
+       
+       double precision lambdafunc(ndiseff),survfunc(ndiseff),dellamb,
      .          deltalambdafunc(ndiseff)       
 
         ONE=1.d0
-	ZERO=0.d0
+       ZERO=0.d0
 
 
 c     This function need that alpha and beta are estimated
 
 c   Initialization  
-	do i=1,ndiseff
-	 lambdafunc(i)=ZERO 	 
-	 survfunc(i)=ONE
+       do i=1,ndiseff
+        lambdafunc(i)=ZERO 
+        survfunc(i)=ONE
 c   Delta N(s,t)
-	 DeltaNst(i)=ZERO
+        DeltaNst(i)=ZERO
 c   S0(s,t)
          S0st(i)=ZERO
       end do
       
-	do i=2,ndiseff
-	 
-	  do j=1,nk
+       do i=2,ndiseff
+        
+         do j=1,nk
            if ((caltimes(j).le.s).and.(effage(j).eq.diseff(i))) then
              DeltaNst(i)=DeltaNst(i)+1  
            end if
@@ -1357,338 +1358,335 @@ c   S0(s,t)
           call nsm(s,n,nk,caltimes,k,ns)
         
       
-	  call AtRisk(s,ns,diseff(i),n,nvar,nk,k,tau,caltimes,
+         call AtRisk(s,ns,diseff(i),n,nvar,nk,k,tau,caltimes,
      .     gaptimes,censored,intercepts,slopes,lastperrep,perrepind,
-     .	   effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
+     .     effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
      .     Ysubj,S0st(i),GrS0A1,GrS0Be,Gr2S0A1,Gr2S0A1Be,Gr2S0Be)
         
-	
-	  if (S0st(i).gt.ZERO) then
-	    dellamb=min(DeltaNst(i)/S0st(i),ONE)
-	    lambdafunc(i)=lambdafunc(i-1)+dellamb
-	    survfunc(i)=survfunc(i-1)*(1-dellamb)
+       
+         if (S0st(i).gt.ZERO) then
+           dellamb=min(DeltaNst(i)/S0st(i),ONE)
+           lambdafunc(i)=lambdafunc(i-1)+dellamb
+           survfunc(i)=survfunc(i-1)*(1-dellamb)
           else
-	    lambdafunc(i)=lambdafunc(i-1)
-	    survfunc(i)=survfunc(i-1)
-	  end if           
+           lambdafunc(i)=lambdafunc(i-1)
+           survfunc(i)=survfunc(i-1)
+         end if           
       
-	end do
+       end do
       
-	deltalambdafunc(1)=0.d0
-	do i=2,ndiseff
+       deltalambdafunc(1)=0.d0
+       do i=2,ndiseff
         deltalambdafunc(i)=lambdafunc(i)-lambdafunc(i-1)
-	end do
-	  	
-	return		
-	END SUBROUTINE 
+       end do
+         
+       return
+       END SUBROUTINE 
 
-		
-	
-	
-	
-	SUBROUTINE scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
-     .	          censored,intercepts,slopes,lastperrep,perrepind,
-     .            effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
-     .            ns,loglik,score,info,scorealpha,scorebeta,
-     .            infoalpha,infobeta)
-	
+
+
+       SUBROUTINE scorefunc(s,n,nvar,k,nk,tau,caltimes,gaptimes,
+     .         censored,intercepts,slopes,lastperrep,perrepind,
+     .         effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
+     .         ns,loglik,score,info,scorealpha,scorebeta,
+     .         infoalpha,infobeta)
+       
 
         implicit none
-	
-	integer n,nvar,rhoFunc
+       
+       integer n,nvar,rhoFunc
         integer k(n),nk,i,j,pos,r,t
-	double precision s,tau(n),caltimes(nk),
+       double precision s,tau(n),caltimes(nk),
      .       gaptimes(nk),censored(n),
      .       intercepts(nk),slopes(nk),lastperrep(nk),perrepind(nk),
      .       effagebegin(nk),effage(nk),cov(nvar,nk),
      .       alpha,beta(nvar),Z(n),w
-	
-	double precision loglik,scorealpha,infoalpha,
+       
+       double precision loglik,scorealpha,infoalpha,
      .       scorebeta(nvar),infoalphabeta(nvar),infobeta(nvar,nvar),
      .       effageOK(200),ZERO
       
-	integer ns(n)
+       integer ns(n)
 
-	double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
+       double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
      .     Gr2S0A1Be(nvar),offset(n),
      .     Gr2S0Be(nvar,nvar),Zsubj,Ysubj(n),GrYsubjA1,Gr2YsubjA1,
      .     GrYsubjBe(nvar),Gr2YsubjA1Be(nvar),Gr2YsubjBe(nvar,nvar),
      .     covariate(nvar),ealpha,ebeta(nvar),ebeta2(nvar,nvar),
      .     score(nvar+1),info(nvar+1,nvar+1)
       
-	real det
-          	     
+       real det
+               
         double precision rho,psi
      
-	ZERO=0.d0 
+       ZERO=0.d0 
       
 c     initialization
-  	
+
         loglik=ZERO
-	scorealpha=ZERO
-	infoalpha=ZERO
-	do i=1,nvar
-	 scorebeta(i)=ZERO
+       scorealpha=ZERO
+       infoalpha=ZERO
+       do i=1,nvar
+        scorebeta(i)=ZERO
          infoalphabeta(i)=ZERO
-	 ebeta(i)=ZERO
-	end do
+        ebeta(i)=ZERO
+       end do
       
-	do i=1,nvar
-	 do j=1,nvar
+       do i=1,nvar
+        do j=1,nvar
          infobeta(i,j)=ZERO
-	   ebeta2(i,j)=ZERO
-	 end do
-	end do
+          ebeta2(i,j)=ZERO
+        end do
+       end do
 
-	ealpha=ZERO
+       ealpha=ZERO
 
-	
+       
       
-	call nsm(s,n,nk,caltimes,k,ns)
-	
+       call nsm(s,n,nk,caltimes,k,ns)
+       
       
-	pos=1
-	do i=1,n
+       pos=1
+       do i=1,n
   
-	  do r=1,200
+         do r=1,200
            effageOK(r)=0.d0
-	  end do
-	  
+         end do
+         
           do r=1,k(i)
            effageOK(r)=effage(pos)
            do t=1,nvar
-	    covariate(t)=cov(t,pos)           
-	   end do
-	   pos=pos+1
-	  end do
+           covariate(t)=cov(t,pos)           
+          end do
+          pos=pos+1
+         end do
       
         
 
-    	  if (ns(i).gt.1) then
+          if (ns(i).gt.1) then
            do j=2,ns(i)
-	     w=effageOK(j)
-	     call AtRisk(s,ns,w,n,nvar,nk,k,tau,caltimes,gaptimes,
+            w=effageOK(j)
+              call AtRisk(s,ns,w,n,nvar,nk,k,tau,caltimes,gaptimes,
      .        censored,intercepts,slopes,lastperrep,perrepind,
      .        effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
      .        Ysubj,S0,GrS0A1,GrS0Be,Gr2S0A1,Gr2S0A1Be,Gr2S0Be)
-	     
+     
               loglik=loglik+dlog(rho(j-2,alpha,rhoFunc))+
-     .		            dlog(psi(nvar,covariate,beta,offset(i)))
-     .                      -dlog(S0)
-	      
+     .               dlog(psi(nvar,covariate,beta,offset(i)))
+     .              -dlog(S0)
+     
 
               scorealpha=scorealpha+((dble(j-2)/alpha)-(GrS0A1/S0))
-		  		  
-	      ealpha=GrS0A1/S0
-	      infoalpha=infoalpha+(dble(j-2)/alpha**2)+
-     .                          (Gr2S0A1/S0)-ealpha**2
-		  
-		  do t=1,nvar
-		   scorebeta(t)=scorebeta(t)+
-     *		  covariate(t)-(GrS0Be(t)/S0) 
-		  end do
-		  
-		  do t=1,nvar
-		   ebeta(t)=GrS0Be(t)/S0 
-                  end do 
-	      
-		  do t=1,nvar 
-		   infoalphabeta(t)=infoalphabeta(t)+(Gr2S0A1Be(t)/S0)-
-     .                        ealpha*ebeta(t) 
-	          end do
-	      
-		  do t=1,nvar 
-		   do r=1,nvar
-	             ebeta2(t,r)=ebeta(t)*ebeta(r)
-	           end do
-		  end do
 
-		  do t=1,nvar
+             ealpha=GrS0A1/S0
+             infoalpha=infoalpha+(dble(j-2)/alpha**2)+
+     .                          (Gr2S0A1/S0)-ealpha**2
+
+                  do t=1,nvar
+                  scorebeta(t)=scorebeta(t)+
+     *            covariate(t)-(GrS0Be(t)/S0) 
+                  end do
+   
+                  do t=1,nvar
+                   ebeta(t)=GrS0Be(t)/S0 
+                  end do 
+  
+                  do t=1,nvar 
+                   infoalphabeta(t)=infoalphabeta(t)+(Gr2S0A1Be(t)/S0)-
+     .                            ealpha*ebeta(t) 
+                 end do
+             
+                 do t=1,nvar 
+                  do r=1,nvar
+                    ebeta2(t,r)=ebeta(t)*ebeta(r)
+                  end do
+                 end do
+
+                  do t=1,nvar
                    do r=1,nvar
-	            infobeta(t,r)=infobeta(t,r)+(Gr2S0Be(t,r)/S0)-
-     *	       ebeta2(t,r)
-		   end do
-		  end do
+                    infobeta(t,r)=infobeta(t,r)+(Gr2S0Be(t,r)/S0)-
+     *                            ebeta2(t,r)
+                   end do
+                  end do
 
             end do   
-	  end if
+         end if
 
-	
+       
           end do
-	    
+           
 
 
 
-	score(1)=scorealpha
-	info(1,1)=infoalpha
-	
+       score(1)=scorealpha
+       info(1,1)=infoalpha
+       
         do i=2,nvar+1
          score(i)=scorebeta(i-1)
-	 info(1,i)=infoalphabeta(i-1)
-	 info(i,1)=infoalphabeta(i-1)
-	end do
-	
-		
-	do i=2,nvar+1
-	 do j=2,nvar+1 
-	  info(i,j)=infobeta(i-1,j-1)
-	 end do
+        info(1,i)=infoalphabeta(i-1)
+        info(i,1)=infoalphabeta(i-1)
+       end do
+       
+
+       do i=2,nvar+1
+        do j=2,nvar+1 
+         info(i,j)=infobeta(i-1,j-1)
+        end do
         end do 
-	
-	return
+       
+       return
       END SUBROUTINE 
 
 
 
 
-	
-	SUBROUTINE nsm(s,n,nk,caltimes,k,nm)
-	implicit none
+       
+       SUBROUTINE nsm(s,n,nk,caltimes,k,nm)
+       implicit none
 
-	double precision s
-	integer n,nk,pos,i,j
-	double precision caltimes(nk)
+       double precision s
+       integer n,nk,pos,i,j
+       double precision caltimes(nk)
         integer k(n)
-	integer nm(n),nism
+       integer nm(n),nism
 
-	double precision caltimesOK(200)
+       double precision caltimesOK(200)
 
 
-	do i=1,200
-	 caltimesOK(i)=0.d0
+       do i=1,200
+        caltimesOK(i)=0.d0
         end do
 
-	pos=1 
-	do i=1,n
-	  do j=1,k(i)
+       pos=1 
+       do i=1,n
+         do j=1,k(i)
          caltimesOK(j)=caltimes(pos)
-	   pos=pos+1
+          pos=pos+1
         end do
-	  nm(i)=nism(s,caltimesOK,k(i))
-	end do 
+         nm(i)=nism(s,caltimesOK,k(i))
+       end do 
       
-	return 
-	END SUBROUTINE
-	
+       return 
+       END SUBROUTINE
+       
 
 
-	INTEGER FUNCTION nism(s,caltimes,k)
+       INTEGER FUNCTION nism(s,caltimes,k)
         implicit none
 
-	double precision s
-	integer k,i
-	double precision caltimes(k)
+       double precision s
+       integer k,i
+       double precision caltimes(k)
 
-c     routine that compute n_i^\dagger(s-) 	
-	if (s.gt.caltimes(k)) then
+c     routine that compute n_i^\dagger(s-) 
+       if (s.gt.caltimes(k)) then
         nism=k
-	
+       
 c     modification made by Juan (no break)
         else 
         nism=0
-	  i=1
-	  do while (caltimes(i).lt.s) 
-	    nism=nism+1
-	    i=i+1
-	  end do
-	
-	end if
-	
-	return
-	END FUNCTION
+         i=1
+         do while (caltimes(i).lt.s) 
+           nism=nism+1
+           i=i+1
+         end do
+       
+       end if
+       
+       return
+       END FUNCTION
 
       
-	DOUBLE PRECISION FUNCTION norm(n,vec1,vec2)
+       DOUBLE PRECISION FUNCTION norm(n,vec1,vec2)
         implicit none
       
-	integer n,i
-	double precision vec1(n),vec2(n),distance      
+       integer n,i
+       double precision vec1(n),vec2(n),distance      
 
-	 distance=(vec1(1)-vec2(1))**2
-	 if (n.gt.1) then
-	  do i=2,n
+        distance=(vec1(1)-vec2(1))**2
+        if (n.gt.1) then
+         do i=2,n
            distance=distance+(vec1(i)-vec2(i))**2
-	  end do
+         end do
          end if
          norm=distance**0.5
       
-	return
-	END FUNCTION 
+       return
+       END FUNCTION 
 
-	
-	
-	SUBROUTINE AtRisk(s,ns,w,n,nvar,nk,k,tau,caltimes,
+       
+       
+       SUBROUTINE AtRisk(s,ns,w,n,nvar,nk,k,tau,caltimes,
      .    gaptimes,censored,intercepts,slopes,lastperrep,
-     .	  perrepind,effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
+     .    perrepind,effagebegin,effage,cov,alpha,beta,Z,offset,rhoFunc,
      .    Ysubj,S0,GrS0A1,GrS0Be,Gr2S0A1,Gr2S0A1Be,Gr2S0Be)
 
-	implicit none
-	
-	integer n,nvar,nk,kk,i,j,t,pos,rhoFunc
-	integer k(n),ns(n),nsi
-	double precision w,s,tau(n),caltimes(nk),gaptimes(nk),
-     .	      censored(n),intercepts(nk),slopes(nk),lastperrep(nk),
-     .		  perrepind(nk),effagebegin(nk),effage(nk),cov(nvar,nk)
+       implicit none
+       
+       integer n,nvar,nk,kk,i,j,t,pos,rhoFunc
+       integer k(n),ns(n),nsi
+       double precision w,s,tau(n),caltimes(nk),gaptimes(nk),
+     .     censored(n),intercepts(nk),slopes(nk),lastperrep(nk),
+     .     perrepind(nk),effagebegin(nk),effage(nk),cov(nvar,nk)
 
-	double precision caltimesOK(200),gaptimesOK(200),
-     .	      censoredOK,interceptsOK(200),slopesOK(200),
-     .          lastperrepOK(200),perrepindOK(200),effagebeginOK(200),
-     .          effageOK(200),covOK(nvar,200) 
-	
-	double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
+       double precision caltimesOK(200),gaptimesOK(200),
+     .      censoredOK,interceptsOK(200),slopesOK(200),
+     .      lastperrepOK(200),perrepindOK(200),effagebeginOK(200),
+     .      effageOK(200),covOK(nvar,200) 
+       
+       double precision S0,GrS0A1,Gr2S0A1,GrS0Be(nvar),
      .    Gr2S0A1Be(nvar),offset(n),
      .    Gr2S0Be(nvar,nvar),alpha,beta(nvar),Z(n),Zsubj,ZERO,
      .    Ysubj(n),GrYsubjA1,Gr2YsubjA1,GrYsubjBe(nvar),
      .    Gr2YsubjA1Be(nvar),Gr2YsubjBe(nvar,nvar)      
-	
-	
+       
+       
 
 
 c     Equations (25) (26) (27) S0 and gradients
 
-c     initialization	
-	ZERO=0.d0
+c     initialization
+       ZERO=0.d0
 c     initialitation 
         S0=ZERO
-	GrS0A1=ZERO
-	Gr2S0A1=ZERO
-	do i=1,nvar
-	 GrS0Be(i)=ZERO
-	 Gr2S0A1Be(i)=ZERO
-	 do j=1,nvar
-	  Gr2S0Be(i,j)=ZERO
-	 end do
+        GrS0A1=ZERO
+        Gr2S0A1=ZERO
+        do i=1,nvar
+         GrS0Be(i)=ZERO
+         Gr2S0A1Be(i)=ZERO
+        do j=1,nvar
+         Gr2S0Be(i,j)=ZERO
         end do
-	do i=1,n
+        end do
+        do i=1,n
           Ysubj(i)=ZERO
-	end do
-	
-	
-	pos=1
-	do i=1,n
+        end do
+
+        pos=1
+        do i=1,n
 c     we select the data for each subject from the array
          censoredOK=censored(i)
-	 do j=1,k(i)
+        do j=1,k(i)
            caltimesOK(j)=caltimes(pos)
-	   gaptimesOK(j)=gaptimes(pos)
+          gaptimesOK(j)=gaptimes(pos)
            interceptsOK(j)=intercepts(pos)
            slopesOK(j)=slopes(pos)
-	   slopesOK(j)=slopes(pos)
-	   lastperrepOK(j)=lastperrep(pos)
-	   perrepindOK(j)=perrepind(pos)
-	   effagebeginOK(j)=effagebegin(pos)
-	   effageOK(j)=effage(pos)
-	   do t=1,nvar
-	    covOK(t,j)=cov(t,pos)
-	   end do
-	   pos=pos+1
-	  end do
-	  
-	 nsi=ns(i)
-	  
-	  call AtRiskSubj(s,nsi,w,nvar,k(i),tau(i),caltimesOK,
+          slopesOK(j)=slopes(pos)
+          lastperrepOK(j)=lastperrep(pos)
+          perrepindOK(j)=perrepind(pos)
+          effagebeginOK(j)=effagebegin(pos)
+          effageOK(j)=effage(pos)
+          do t=1,nvar
+           covOK(t,j)=cov(t,pos)
+          end do
+          pos=pos+1
+         end do
+         
+        nsi=ns(i)
+         
+         call AtRiskSubj(s,nsi,w,nvar,k(i),tau(i),caltimesOK,
      .     gaptimesOK,censoredOK,interceptsOK,slopesOK,lastperrepOK,
-     .	   perrepindOK,effagebeginOK,effageOK,covOK,alpha,beta,rhoFunc,
+     .     perrepindOK,effagebeginOK,effageOK,covOK,alpha,beta,rhoFunc,
      .     offset(i),Ysubj(i),GrYsubjA1,GrYsubjBe,Gr2YsubjA1,
      .     Gr2YsubjA1Be,Gr2YsubjBe)
          
@@ -1696,52 +1694,51 @@ c     we select the data for each subject from the array
 
         Zsubj=Z(i)
 
-  	S0=S0+Zsubj*Ysubj(i)
-	GrS0A1=GrS0A1+Zsubj*GrYsubjA1
-	Gr2S0A1=Gr2S0A1+Zsubj*Gr2YsubjA1
+         S0=S0+Zsubj*Ysubj(i)
+       GrS0A1=GrS0A1+Zsubj*GrYsubjA1
+       Gr2S0A1=Gr2S0A1+Zsubj*Gr2YsubjA1
 
-	do j=1,nvar
+       do j=1,nvar
          GrS0Be(j)=GrS0Be(j)+Zsubj*GrYsubjBe(j)
-	 Gr2S0A1Be(j)=Gr2S0A1Be(j)+Zsubj*Gr2YsubjA1Be(j)
-	 do t=1,nvar
+        Gr2S0A1Be(j)=Gr2S0A1Be(j)+Zsubj*Gr2YsubjA1Be(j)
+        do t=1,nvar
           Gr2S0Be(j,t)=Gr2S0Be(j,t)+Zsubj*Gr2YsubjBe(j,t)
-	 end do 
-	end do
+        end do 
+       end do
 
-     	
-	end do
-	
-	return
-	END SUBROUTINE
+            
+       end do
+       
+       return
+       END SUBROUTINE
 
 
 
 
       SUBROUTINE AtRiskSubj(s,nsi,w,nvar,k,tau,caltimes,
      .    gaptimes,censored,intercepts,slopes,lastperrep,
-     .	  perrepind,effagebegin,effage,cov,alpha,beta,rhoFunc,offset,
+     .    perrepind,effagebegin,effage,cov,alpha,beta,rhoFunc,offset,
      .    Ysubj,GrYsubjA1,GrYsubjBe,Gr2YsubjA1,
      .    Gr2YsubjA1Be,Gr2YsubjBe)
 
       implicit none
-	
+
       integer nsi,nvar,k,kk,i,j,t,rhoFunc
       double precision w,s,tau,caltimes(k),gaptimes(k),
-     .	      censored,intercepts(k),slopes(k),lastperrep(k),
-     .		  perrepind(k),effagebegin(k),effage(k),cov(nvar,k)
+     .   censored,intercepts(k),slopes(k),lastperrep(k),
+     .   perrepind(k),effagebegin(k),effage(k),cov(nvar,k)
       
       double precision Q(nsi),R,GrQA1(nsi),GrQBe(nvar,nsi),GrRA1,
-     .	GrRBe(nvar),Gr2QA1(nsi),Gr2QA1Be(nvar,nsi),
-     .  Gr2QBe(nsi,nvar,nvar),Gr2RA1,Gr2RA1Be(nvar),Gr2RBe(nvar,nvar),
-     .    alpha,beta(nvar),ONE,ZERO
+     . GrRBe(nvar),Gr2QA1(nsi),Gr2QA1Be(nvar,nsi),
+     . Gr2QBe(nsi,nvar,nvar),Gr2RA1,Gr2RA1Be(nvar),Gr2RBe(nvar,nvar),
+     . alpha,beta(nvar),ONE,ZERO
      
       double precision covariate(nvar),effageats,vect1(nsi),Ysubj,
      .    GrYsubjA1,Gr2YsubjA1,GrYsubjBe(nvar),Gr2YsubjA1Be(nvar),
      .    Gr2YsubjBe(nvar,nvar)
       
       double precision rho,psi,offset
-        	
-		 
+
       ONE=1.d0
       ZERO=0.d0
 
@@ -1752,32 +1749,32 @@ c        take care with changes in nsi and array sizes !!!
 
 
 c     Initialization 
-	R=ZERO
-	GrRA1=ZERO
-	Gr2RA1=ZERO
-	do i =1,kk
-	 Q(i)=ZERO
+       R=ZERO
+       GrRA1=ZERO
+       Gr2RA1=ZERO
+       do i =1,kk
+        Q(i)=ZERO
 c      Gradient of Q wrt alpha
-	 GrQA1(i)=ZERO
+        GrQA1(i)=ZERO
 c      second derivative wrt alpha       
-	 Gr2QA1(i)=ZERO
-	 do j=1,nvar
+        Gr2QA1(i)=ZERO
+        do j=1,nvar
 c      Gradient of Q wrt beta
-	  GrQBe(j,i)=ZERO
-	  Gr2QA1Be(j,i)=ZERO
-	 end do
-	end do
+         GrQBe(j,i)=ZERO
+         Gr2QA1Be(j,i)=ZERO
+        end do
+       end do
    
-	do i=1,nvar
+       do i=1,nvar
          GrRBe(i)=ZERO
          Gr2RA1Be(i)=ZERO
          do j=1,nvar
           Gr2RBe(j,i)=ZERO
-	  do t=1,kk
-	   Gr2QBe(t,i,j)=ZERO
-	  end do 
-	 end do
-	end do
+         do t=1,kk
+          Gr2QBe(t,i,j)=ZERO
+         end do 
+        end do
+       end do
 
          
              
@@ -1786,191 +1783,190 @@ c     Equation (23) Q_ij
         do j=2,kk
          if ((w.gt.effagebegin(j-1)).and.(w.le.effage(j))) then
           
-		do i=1,nvar
-		 covariate(i)=cov(i,j-1)           
+              do i=1,nvar
+               covariate(i)=cov(i,j-1)           
                 end do
 
-	    Q(j)=(rho(j-2,alpha,rhoFunc)*psi(nvar,covariate,beta,offset))
-     .                         		/slopes(j-1)
+           Q(j)=(rho(j-2,alpha,rhoFunc)*psi(nvar,covariate,beta,offset))
+     .                           /slopes(j-1)
 
 c      change in the equations (26) (27) version June 6,2003
 c      if rho is equal to $1$ or equal to $\alpha^j$
-      	if (rhoFunc.eq.1) then
-c          $\rho(j;\alpha)=1$          		 
-		 GrQA1(j)=Q(j)
+         if (rhoFunc.eq.1) then
+c          $\rho(j;\alpha)=1$          
+                 GrQA1(j)=Q(j)
           else
 c          $\rho(j;\alpha)=\alpha^j$                     
-		 GrQA1(j)=(dble(j-2)/alpha)*Q(j)
-		end if  
+                 GrQA1(j)=(dble(j-2)/alpha)*Q(j)
+         end if  
           
-		do i=1,nvar
-		  GrQBe(i,j)=covariate(i)*Q(j)
-		  if (rhoFunc.eq.1) then
-c             $\rho(j;\alpha)=1$          		               
-			Gr2QA1Be(i,j)=covariate(i)*Q(j)
-		  else
+                  do i=1,nvar
+                  GrQBe(i,j)=covariate(i)*Q(j)
+                  if (rhoFunc.eq.1) then
+c             $\rho(j;\alpha)=1$                         
+                   Gr2QA1Be(i,j)=covariate(i)*Q(j)
+                  else
 c             $\rho(j;\alpha)=\alpha^j$                     
-		    Gr2QA1Be(i,j)=(dble(j-2)/alpha)*covariate(i)*Q(j)
-		  end if
-		  do t=1,nvar
+                   Gr2QA1Be(i,j)=(dble(j-2)/alpha)*covariate(i)*Q(j)
+                  end if
+                  do t=1,nvar
              Gr2QBe(j,i,t)=Q(j)*covariate(i)*covariate(t) 
-	      end do
-		end do
-		if (rhoFunc.eq.1) then
-c          $\rho(j;\alpha)=1$          		          
-		 Gr2QA1(j)=Q(j)
-		else
+             end do
+                end do
+                if (rhoFunc.eq.1) then
+c          $\rho(j;\alpha)=1$      
+                Gr2QA1(j)=Q(j)
+                else
 c          $\rho(j;\alpha)=\alpha^j$                     
-		 Gr2QA1(j)=(dble((j-2)*(j-3))/alpha**2)*Q(j)
-	    end if 
-	   	   
-	   end if
-	  end do
+                Gr2QA1(j)=(dble((j-2)*(j-3))/alpha**2)*Q(j)
+           end if 
+          end if
+         end do
       end if
 
-	
-	
+       
+       
       
 c       Equation (24) R_i
-	effageats=intercepts(kk)+slopes(kk)*min(s,tau)
-     .	    -caltimes(lastperrep(kk))	
-	
+       effageats=intercepts(kk)+slopes(kk)*min(s,tau)
+     .     -caltimes(lastperrep(kk))
 
-	if ((w.gt.effagebegin(kk)).and.(w.le.effageats)) then
-	   do i=1,nvar
-	      covariate(i)=cov(i,kk)           
-	   end do
 
-	   R=(rho(kk-1,alpha,rhoFunc)*
-     *	psi(nvar,covariate,beta,offset))/slopes(kk)
-	   
-	   if (rhoFunc.eq.1) then
-c       $\rho(j;\alpha)=1$          		          	   
-	      GrRA1=R
-	   else
-c       $\rho(j;\alpha)=\alpha^j$                     	   
-	      GrRA1=(dble(kk-1)/alpha)*R
-	   end if
-	   
-	   do i=1,nvar
-	      GrRBe(i)=covariate(i)*R
-	      if (rhoFunc.eq.1) then
-c       $\rho(j;\alpha)=1$          		          	   
-		 Gr2RA1Be(i)=covariate(i)*R
-	      else
-c       $\rho(j;\alpha)=\alpha^j$                   	    
-		 Gr2RA1Be(i)=(dble(kk-1)/alpha)*covariate(i)*R
-	      end if	 
-	      
-	      do j=1,nvar
-		 Gr2RBe(i,j)=(R*covariate(i))*covariate(j)
-	      end do
-	   end do
+       if ((w.gt.effagebegin(kk)).and.(w.le.effageats)) then
+          do i=1,nvar
+             covariate(i)=cov(i,kk)           
+          end do
 
-	   if (rhoFunc.eq.1) then
-c       $\rho(j;\alpha)=1$          		          	   
-	      Gr2RA1=R
-	   else 
-c       $\rho(j;\alpha)=\alpha^j$                   	            
-	      Gr2RA1=(dble((kk-1)*(kk-2))/alpha**2)*R
-	   end if   
-	end if
-	
+          R=(rho(kk-1,alpha,rhoFunc)*
+     *       psi(nvar,covariate,beta,offset))/slopes(kk)
+          
+          if (rhoFunc.eq.1) then
+c       $\rho(j;\alpha)=1$  
+             GrRA1=R
+          else
+c       $\rho(j;\alpha)=\alpha^j$          
+             GrRA1=(dble(kk-1)/alpha)*R
+          end if
+          
+          do i=1,nvar
+             GrRBe(i)=covariate(i)*R
+             if (rhoFunc.eq.1) then
+c       $\rho(j;\alpha)=1$          
+               Gr2RA1Be(i)=covariate(i)*R
+             else
+c       $\rho(j;\alpha)=\alpha^j$                  
+               Gr2RA1Be(i)=(dble(kk-1)/alpha)*covariate(i)*R
+             end if
+             
+             do j=1,nvar
+                Gr2RBe(i,j)=(R*covariate(i))*covariate(j)
+             end do
+          end do
+
+          if (rhoFunc.eq.1) then
+c       $\rho(j;\alpha)=1$    
+             Gr2RA1=R
+          else 
+c       $\rho(j;\alpha)=\alpha^j$             
+             Gr2RA1=(dble((kk-1)*(kk-2))/alpha**2)*R
+          end if   
+       end if
+       
 
 c       OUTPUT 
 c       Initialization 
-	do i=1,kk
-	   vect1(i)=ONE
-	end do
-	Ysubj=ZERO
-	GrYsubjA1=ZERO
-	Gr2YsubjA1=ZERO
-	do i=1,nvar
-	   GrYsubjBe(i)=ZERO
-	   Gr2YsubjA1Be(i)=ZERO
-	   do j=1,nvar
-	      Gr2YsubjBe(i,j)=ZERO
-	   end do
-	end do
+       do i=1,kk
+          vect1(i)=ONE
+       end do
+       Ysubj=ZERO
+       GrYsubjA1=ZERO
+       Gr2YsubjA1=ZERO
+       do i=1,nvar
+          GrYsubjBe(i)=ZERO
+          Gr2YsubjA1Be(i)=ZERO
+          do j=1,nvar
+             Gr2YsubjBe(i,j)=ZERO
+          end do
+       end do
 
 c       computes
-	do i=1,kk
-	   Ysubj=Ysubj+Q(i)*vect1(i)
-	   GrYsubjA1=GrYsubjA1+GrQA1(i)*vect1(i)
-	   Gr2YsubjA1=Gr2YsubjA1+Gr2QA1(i)*vect1(i)
-	end do
-	
+       do i=1,kk
+          Ysubj=Ysubj+Q(i)*vect1(i)
+          GrYsubjA1=GrYsubjA1+GrQA1(i)*vect1(i)
+          Gr2YsubjA1=Gr2YsubjA1+Gr2QA1(i)*vect1(i)
+       end do
+       
         Ysubj=Ysubj+R
 
 
         GrYsubjA1=GrYsubjA1+GrRA1
-	Gr2YsubjA1=Gr2YsubjA1+Gr2RA1
-	
-	
-	do i=1,nvar
-	   do j=1,kk
-	      GrYsubjBe(i)=GrYsubjBe(i)+GrQBe(i,j)*vect1(j)
-	      Gr2YsubjA1Be(i)=Gr2YsubjA1Be(i)+Gr2QA1Be(i,j)*vect1(j)
-	   end do
-	end do  
-	do i=1,nvar
-	   GrYsubjBe(i)=GrYsubjBe(i)+GrRBe(i)
-	   Gr2YsubjA1Be(i)=Gr2YsubjA1Be(i)+Gr2RA1Be(i)
-	end do	  
-	
-	if (kk.gt.1) then
-	   do j=2,kk
-	      do i=1,nvar
-		 do t=1,nvar
-		    Gr2YsubjBe(i,t)=Gr2YsubjBe(i,t)+Gr2QBe(j,i,t)
-		 end do
-	      end do   
-	   end do   
-	end if
-	
-	do i=1,nvar
-	   do j=1,nvar
-	      Gr2YsubjBe(i,j)=Gr2YsubjBe(i,j)+Gr2RBe(i,j)
-	   end do
-	end do
+       Gr2YsubjA1=Gr2YsubjA1+Gr2RA1
+       
+       
+       do i=1,nvar
+          do j=1,kk
+             GrYsubjBe(i)=GrYsubjBe(i)+GrQBe(i,j)*vect1(j)
+             Gr2YsubjA1Be(i)=Gr2YsubjA1Be(i)+Gr2QA1Be(i,j)*vect1(j)
+          end do
+       end do  
+       do i=1,nvar
+          GrYsubjBe(i)=GrYsubjBe(i)+GrRBe(i)
+          Gr2YsubjA1Be(i)=Gr2YsubjA1Be(i)+Gr2RA1Be(i)
+       end do  
+       
+       if (kk.gt.1) then
+          do j=2,kk
+             do i=1,nvar
+               do t=1,nvar
+                 Gr2YsubjBe(i,t)=Gr2YsubjBe(i,t)+Gr2QBe(j,i,t)
+               end do
+             end do   
+          end do   
+       end if
+       
+       do i=1,nvar
+          do j=1,nvar
+             Gr2YsubjBe(i,j)=Gr2YsubjBe(i,j)+Gr2RBe(i,j)
+          end do
+       end do
 
-	return  	
-	END SUBROUTINE
+       return 
+       END SUBROUTINE
 
-	
+       
       
-	DOUBLE PRECISION FUNCTION rho(k,alpha,rhoFunc)
-	implicit none
-	integer k,rhoFunc
-	double precision alpha
+       DOUBLE PRECISION FUNCTION rho(k,alpha,rhoFunc)
+       implicit none
+       integer k,rhoFunc
+       double precision alpha
       
-	if (rhoFunc.eq.1) then
+       if (rhoFunc.eq.1) then
         rho=1.0 
-	end if
-	if (rhoFunc.eq.2) then
-	  rho=alpha**k
-	end if 
-	
-	return
-	END FUNCTION	
+       end if
+       if (rhoFunc.eq.2) then
+         rho=alpha**k
+       end if 
+       
+       return
+       END FUNCTION
 
 
-	
-	DOUBLE PRECISION FUNCTION psi(nvar,cov,beta,offset)
-	implicit none
-	
-	integer nvar,i
-	double precision cov(nvar),beta(nvar),offset
-	
+       
+       DOUBLE PRECISION FUNCTION psi(nvar,cov,beta,offset)
+       implicit none
+       
+       integer nvar,i
+       double precision cov(nvar),beta(nvar),offset
+       
         psi=0.d0
-	do i=1,nvar
-	   psi=psi+cov(i)*beta(i)
-	end do
+       do i=1,nvar
+          psi=psi+cov(i)*beta(i)
+       end do
 
-	psi=dexp(psi+offset)
-	
-	return
-	END FUNCTION  
+       psi=dexp(psi+offset)
+       
+       return
+       END FUNCTION  
 
 
 ***********************************************************************
@@ -1980,37 +1976,37 @@ c       computes
 **
 ***********************************************************************
       
-	real*8 FUNCTION GammaLogLik(xi,n,A,K)
+       real*8 FUNCTION GammaLogLik(xi,n,A,K)
 
-	implicit none
+       implicit none
        
         integer i,j,n
-	double precision xi,A(n),G0,q1
+       double precision xi,A(n),G0,q1
         integer K(n),KK(n)
-	real gamma
-	external gamma
+       real gamma
+       external gamma
       
         do i=1,n
          KK(i)=K(i)-1
-	end do
-	G0=0.d0
-			      
-	do i=1,n
+       end do
+       G0=0.d0
+      
+       do i=1,n
          q1=0.d0
-	 if (KK(i).gt.0) then
+        if (KK(i).gt.0) then
           do j=1,KK(i)
            q1=q1+dlog(xi+dble(j)-1.d0)
-	  end do
-	 end if
+         end do
+        end if
          G0=G0+q1+xi*dlog(xi)-(xi+KK(i))*dlog(xi+A(i))  
-	end do
+       end do
       
-	
-	GammaLogLik=-G0
+       
+       GammaLogLik=-G0
        
       
-	return
-	END FUNCTION
+       return
+       END FUNCTION
 
 
 
@@ -2111,7 +2107,7 @@ c       restore ordering of matrix.
   130   continue
   140   return
       
-	END SUBROUTINE
+        END SUBROUTINE
 
 
 
@@ -2506,11 +2502,11 @@ c      CALL UERTST(IER,'GAMMA ')                                         MGAA179
 
       SUBROUTINE mnbrak(ax,bx,cx,fa,fb,fc,func,nn,KK,AA,BB)
 
-	integer nn
-	integer KK(nn)
-	double precision AA(nn),BB(nn)
+       integer nn
+       integer KK(nn)
+       double precision AA(nn),BB(nn)
             
-	REAL*8 ax,bx,cx,fa,fb,fc,func,GOLD,GLIMIT,TINY
+       REAL*8 ax,bx,cx,fa,fb,fc,func,GOLD,GLIMIT,TINY
       EXTERNAL func
       PARAMETER (GOLD=1.618034, GLIMIT=100., TINY=1.e-20)
 c Given a function func, and given distinct initial points ax and bx, this routine searches
@@ -2585,113 +2581,113 @@ c is the maximum magnication allowed for a parabolic-t step.
 
 c
 c  Function modified to use GammaLogLik
-c	
-	integer nn
-	integer KK(nn)
-	double precision AA(nn),BB(nn)
-	
-	INTEGER ITMAX
-	REAL*8 brentFUN,ax,bx,cx,tol,xmin,f,CGOLD,ZEPS
-	EXTERNAL f
-	PARAMETER (ITMAX=100,CGOLD=.3819660,ZEPS=1.0e-10)
-c	Given a function f, and given a bracketing triplet of abscissas ax, bx, cx (such that bx is
-c	between ax and cx, and f(bx) is less than both f(ax) and f(cx)), this routine isolates
-c	the minimum to a fractional precision of about tol using Brent's method. The abscissa of
-c	the minimum is returned as xmin, and the minimum function value is returned as brent,
-c	the returned function value.
-c	Parameters: Maximum allowed number of iterations; golden ratio; and a small number that
-c	protects against trying to achieve fractional accuracy for a minimum that happens to be
-c	exactly zero.
-	INTEGER iter
-	REAL*8 a,b,d,e,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm
-	a=min(ax,cx) 
-	b=max(ax,cx)
-	v=bx 
-	w=v
-	x=v
-	e=0. 
-	fx=f(x,nn,KK,AA,BB)
-	fv=fx
-	fw=fx
-	do iter=1,ITMAX 
-	xm=0.5*(a+b)
-	tol1=tol*abs(x)+ZEPS
-	tol2=2.*tol1
-	if(abs(x-xm).le.(tol2-.5*(b-a))) goto 3 
-	if(abs(e).gt.tol1) then 
-	r=(x-w)*(fx-fv)
-	q=(x-v)*(fx-fw)
-	p=(x-v)*q-(x-w)*r
-	q=2.*(q-r)
-	if(q.gt.0.) p=-p
-	q=abs(q)
-	etemp=e
-	e=d
-	if(abs(p).ge.abs(.5*q*etemp).or.p.le.q*(a-x).or.
+c       
+       integer nn
+       integer KK(nn)
+       double precision AA(nn),BB(nn)
+       
+       INTEGER ITMAX
+       REAL*8 brentFUN,ax,bx,cx,tol,xmin,f,CGOLD,ZEPS
+       EXTERNAL f
+       PARAMETER (ITMAX=100,CGOLD=.3819660,ZEPS=1.0e-10)
+c       Given a function f, and given a bracketing triplet of abscissas ax, bx, cx (such that bx is
+c       between ax and cx, and f(bx) is less than both f(ax) and f(cx)), this routine isolates
+c       the minimum to a fractional precision of about tol using Brent's method. The abscissa of
+c       the minimum is returned as xmin, and the minimum function value is returned as brent,
+c       the returned function value.
+c       Parameters: Maximum allowed number of iterations; golden ratio; and a small number that
+c       protects against trying to achieve fractional accuracy for a minimum that happens to be
+c       exactly zero.
+       INTEGER iter
+       REAL*8 a,b,d,e,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm
+       a=min(ax,cx) 
+       b=max(ax,cx)
+       v=bx 
+       w=v
+       x=v
+       e=0. 
+       fx=f(x,nn,KK,AA,BB)
+       fv=fx
+       fw=fx
+       do iter=1,ITMAX 
+       xm=0.5*(a+b)
+       tol1=tol*abs(x)+ZEPS
+       tol2=2.*tol1
+       if(abs(x-xm).le.(tol2-.5*(b-a))) goto 3 
+       if(abs(e).gt.tol1) then 
+       r=(x-w)*(fx-fv)
+       q=(x-v)*(fx-fw)
+       p=(x-v)*q-(x-w)*r
+       q=2.*(q-r)
+       if(q.gt.0.) p=-p
+       q=abs(q)
+       etemp=e
+       e=d
+       if(abs(p).ge.abs(.5*q*etemp).or.p.le.q*(a-x).or.
      * p.ge.q*(b-x)) goto 1
-c	The above conditions determine the acceptability of the parabolic t. Here it is o.k.:
-c	d=p/q Take the parabolic step.
-	d=p/q
-	u=x+d
-	if(u-a.lt.tol2 .or. b-u.lt.tol2) d=sign(tol1,xm-x)
-	goto 2 
-	endif
+c       The above conditions determine the acceptability of the parabolic t. Here it is o.k.:
+c       d=p/q Take the parabolic step.
+       d=p/q
+       u=x+d
+       if(u-a.lt.tol2 .or. b-u.lt.tol2) d=sign(tol1,xm-x)
+       goto 2 
+       endif
     1 if(x.ge.xm) then 
-	e=a-x
-	else
-	e=b-x
-	endif
-	d=CGOLD*e 
+       e=a-x
+       else
+       e=b-x
+       endif
+       d=CGOLD*e 
     2 if(abs(d).ge.tol1) then 
-	u=x+d 
-	else 
-	u=x+sign(tol1,d)
-	endif
-	fu=f(u,nn,KK,AA,BB) 
-	if(fu.le.fx) then 
-	if(u.ge.x) then
-	a=x
-	else
-	b=x
-	endif
-	v=w
-	fv=fw
-	w=x
-	fw=fx
-	x=u
-	fx=fu
-	else
-	if(u.lt.x) then
-	a=u
-	else
-	b=u
-	endif
-	if(fu.le.fw .or. w.eq.x) then
-	v=w
-	fv=fw
-	w=u
-	fw=fu
-	else if(fu.le.fv .or. v.eq.x .or. v.eq.w) then
-	v=u
-	fv=fu
-	endif
-	endif 
-	enddo 
-c	pause 'brent exceed maximum iterations'
+       u=x+d 
+       else 
+       u=x+sign(tol1,d)
+       endif
+       fu=f(u,nn,KK,AA,BB) 
+       if(fu.le.fx) then 
+       if(u.ge.x) then
+       a=x
+       else
+       b=x
+       endif
+       v=w
+       fv=fw
+       w=x
+       fw=fx
+       x=u
+       fx=fu
+       else
+       if(u.lt.x) then
+       a=u
+       else
+       b=u
+       endif
+       if(fu.le.fw .or. w.eq.x) then
+       v=w
+       fv=fw
+       w=u
+       fw=fu
+       else if(fu.le.fv .or. v.eq.x .or. v.eq.w) then
+       v=u
+       fv=fu
+       endif
+       endif 
+       enddo 
+c       pause 'brent exceed maximum iterations'
     3 xmin=x 
-	brentFUN=fx
-	return
-	END SUBROUTINE
+       brentFUN=fx
+       return
+       END SUBROUTINE
 
 
       FUNCTION golden(ax,bx,cx,f,tol,xmin,nn,KK,AA,BB)
       
-	integer nn
-	integer KK(nn)
-	double precision AA(nn),BB(nn)
-	
-	
-	REAL*8 golden,ax,bx,cx,tol,xmin,f,R,C
+       integer nn
+       integer KK(nn)
+       double precision AA(nn),BB(nn)
+       
+       
+       REAL*8 golden,ax,bx,cx,tol,xmin,f,R,C
       EXTERNAL f
       PARAMETER (R=.61803399,C=1.-R)
 c Given a function f, and given a bracketing triplet of abscissas ax, bx, cx (such that bx is

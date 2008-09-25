@@ -10,7 +10,7 @@
 }
 
 \usage{
-\method{plot}{gcmrec}(x, type.plot = "surv", ...)
+plot.gcmrec(x, type.plot = "surv", ...)
 }
 
 \arguments{

@@ -39,7 +39,7 @@ function (formula, data, effageData = NULL, s, Frailty = FALSE,
     m[[1]] <- as.name("model.frame")
     m <- eval(m, sys.parent())
     n <- nrow(m)
-    Y <- model.extract(m, "response")
+    Y <- model.extract(m, response)
     if (!is.Survr(Y)) 
         stop("Response must be a survival recurrent object")
     offset <- attr(Terms, "offset")
@@ -207,8 +207,6 @@ function (formula, data, effageData = NULL, s, Frailty = FALSE,
             fit$var <- matrix(NA, nvar + 1, nvar + 1)
         if (se.type == 1 & rho.type==2) 
             fit$var <- matrix(NA, nvar + 2, nvar + 2)
-        if (se.type == 2) 
-            fit$var <- JackEstCov
 
         fit$n <- ans[[2]]
         fit$nk <- ans[[5]]

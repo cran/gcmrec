@@ -9,7 +9,7 @@
   This function returns hazard rations (HR) and its confidence intervals
 }
 \usage{
-\method{summary}{gcmrec}(object, level = 0.95, len = 6, d = 2, lab="hr", ...)
+summary.gcmrec(object, level = 0.95, len = 6, d = 2, lab="hr", ...)
 }
 
 \arguments{
