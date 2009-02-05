@@ -38,8 +38,7 @@ gcmrec(formula, data, effageData = NULL, s, Frailty = FALSE,
                      intercepts, slopes, lastperrep, perrepind, effage, effagebegin, 
                      and covariate including this information:
 
-           \describe
-             {
+              \describe{
                \item{subj:}{Subject number or identificator. }
                \item{k:}{Number of recurrences (time 0 must be included). }
                \item{tau:}{Administrative time, time of study termination. }

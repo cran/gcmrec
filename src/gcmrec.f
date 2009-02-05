@@ -666,7 +666,7 @@ c       We need to adjust K to reflect that 0 is included in count
      *    beta,deltalambdafunc,Z,offset,rhoFunc,KK,AA,BB)
        implicit none
 
-       integer n,nvar,rhoFunc,ndiseff
+       integer n,nvar,rhoFunc,ndiseff,saca
        integer k(n),nk,i,j,r,t,u
        double precision s,tau(n),caltimes(nk),gaptimes(nk),
      *    censored(n),offset(n),
@@ -721,19 +721,40 @@ c       Computes Ki's and Ai's to obtain new Z-values
           end do
 
           if (KK(i).gt.1) then
-             do j=2,KK(i)
+              
+
+
+c ---- Changed Feb'09 after CRAN requirement
+
+c             do j=2,KK(i)
+c               BB(i)=BB(i)+dlog(rho(j-2,alpha,rhoFunc))+
+c     *          dlog(psi(nvar,covariate,beta,offset(i)))
+c               do u=1,ndiseff
+c                if (effageOK(j).eq.diseff(u)) then
+c                 BB(i)=BB(i)+dlog(deltalambdafunc(u))
+c                 goto 3000
+c                end if
+c               end do 
+
+c 3000       end do 
+           
+             j=2
+             saca=0 
+             do while ((j.le.KK(i)).and.(saca.eq.0))
                BB(i)=BB(i)+dlog(rho(j-2,alpha,rhoFunc))+
      *          dlog(psi(nvar,covariate,beta,offset(i)))
-               do u=1,ndiseff
-           if (effageOK(j).eq.diseff(u)) then
-              BB(i)=BB(i)+dlog(deltalambdafunc(u))
-              goto 3000
-            end if
-          end do 
-        
- 3000       end do 
-             
-          end if
+               u=1 
+               do while ((u.le.ndiseff).and.(saca.eq.0))
+                if (effageOK(j).eq.diseff(u)) then
+                 BB(i)=BB(i)+dlog(deltalambdafunc(u))
+                 saca=1
+                end if
+               u=u+1
+               end do 
+             j=j+1 
+             end do 
+ 
+        end if
           
        end do       
 
@@ -1829,7 +1850,7 @@ c          $\rho(j;\alpha)=\alpha^j$
       
 c       Equation (24) R_i
        effageats=intercepts(kk)+slopes(kk)*min(s,tau)
-     .     -caltimes(lastperrep(kk))
+     .     -caltimes(INT(lastperrep(kk)))
 
 
        if ((w.gt.effagebegin(kk)).and.(w.le.effageats)) then
